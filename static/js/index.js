@@ -3,6 +3,7 @@ import '../css/style'
 import ko from 'knockout'
 import Arbiter from 'promissory-arbiter'
 import {Target} from 'data'
+import {Scout} from 'scout'
 
 class PageVM {
     constructor () {
@@ -74,22 +75,16 @@ class NewTarget {
     }
 
     loadImages (q) {
-        return fetch(`api/images?q=${encodeURIComponent(q)}`)
-            .then(resp => {
-                resp.json().then(json => {
-                    this.links(json.images.slice(0, 10).map(item => {
-                        return item.link
-                    }))
-                })
+        return Scout.getImages(q)
+            .then(images => {
+                this.links(images)
             })
     }
 
     loadMeaning (q) {
-        return fetch(`api/meanings?q=${encodeURIComponent(q)}`)
-            .then(resp => {
-                resp.json().then(json => {
-                    this.description(json.meanings[0].description)
-                })
+        return Scout.getMeaning(q)
+            .then(meaning => {
+                this.description(meaning)
             })
     }
 

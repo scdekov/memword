@@ -4,18 +4,21 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
     "arbiter": "^2.0.2",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "css-loader": "^1.0.0",
+    "eslint-plugin-babel": "^5.1.0",
     "knockout": "^3.4.2",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "promissory-arbiter": "^1.0.1",
     "style-loader": "^0.22.1",
-    "webpack-cli": "^3.1.0",
-    "webpack": "^4.16.5"
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
   },
   "devDependencies": {
     "eslint": "^5.4.0",
