@@ -130,3 +130,4 @@ STATICFILES_DIRS = [
 ]
 
 GOOGLE_SEARCH_URL = 'https://www.googleapis.com/customsearch/v1'
+OXFORD_DICT_SEARCH_URL = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/{word}'

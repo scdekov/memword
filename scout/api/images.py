@@ -5,9 +5,7 @@ from rest_framework.response import Response
 
 from django.conf import settings
 
-
-class SearchImageSerializer(serializers.Serializer):
-    q = serializers.CharField(max_length=128)
+from scout.api.serializers import SearchSerializer
 
 
 class ImageSerializer(serializers.Serializer):
@@ -19,7 +17,7 @@ class ImageSerializer(serializers.Serializer):
 
 class ImagesAPIView(views.APIView):
     def get(self, request):
-        serializer = SearchImageSerializer(data=request.GET)
+        serializer = SearchSerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
 
         images_response = requests.get(settings.GOOGLE_SEARCH_URL, params={
