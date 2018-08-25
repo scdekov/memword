@@ -1,0 +1,7 @@
+node_modules
+db*
+package-lock.json
+server/credentials.py
+venv
+*.pyc
+static/bundles/*

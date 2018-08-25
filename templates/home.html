@@ -1,0 +1,81 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+    <div class="main-content">
+        <a href="#" data-bind="click: function () { active(newTarget) }">NEW</a>
+        <ul class="targets" data-bind="foreach: targets">
+            <li>
+                <a href="#" data-bind="text: identifier,
+                                       click: $parent.activate.bind($parent, $data),
+                                       css: {'active': $parent.active() === $data}">
+                </a>
+            </li>
+        </ul>
+
+        <div class="new-target" data-bind="template: {
+                                           name: 'new-target',
+                                           data: newTarget,
+                                           if: active() === newTarget,
+                                       }, visible: active() === newTarget">
+        </div>
+
+
+        <div class="active-target" data-bind="template: {data: active,
+                                              if: active() !== newTarget},
+                                              visible: active() !== newTarget"
+             style="display: none">
+            <form data-bind="submit: save">
+                <input class="search" data-bind="value: identifier"/>
+                <button data-bind="click: $parent.update.bind($parent, $data)">SAVE</button>
+                <button data-bind="click: $parent.remove.bind($parent, $data)">DELETE</button>
+                <input type="submit" style="position: absolute; left: -9999px"/>
+            </form>
+            <div data-bind="foreach: associations">
+                <form data-bind="submit: $parent.saveAssociation.bind($parent, $data)">
+                    <textarea rows="4" cols="50" class="search" placeholder="description"
+                              data-bind="value: description"></textarea>
+                    <div>
+                        <a href="#" class="close" data-bind="click: imgLink.bind($data, ''), visible: imgLink"></a>
+                        <img height="300" data-bind="attr: {src: imgLink}, visible: imgLink"></img>
+                    </div>
+                    <input type="submit" value="SAVE"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/html" id="new-target">
+        <form data-bind="submit: search">
+            <input class="search" data-bind="value: q"/>
+            <textarea rows="4" cols="50" class="search" placeholder="description"
+                      data-bind="value: description"/></textarea>
+            <div class="lds-hourglass" data-bind="style : { visibility : loading() ? '' : 'hidden'  }"></div>
+            <input type="submit" style="position: absolute; left: -9999px"/>
+            <button class="add-target" data-bind="visible: allowCreate, click: add">ADD</button>
+        </form>
+
+        <ul data-bind="foreach: links">
+            <a href="#" data-bind="click: $parent.selectedLink.bind($parent, $data)">
+                <img height="200" data-bind="attr: {src: $data},
+                                                css: {'selected-img': $parent.selectedLink() === $data}">
+                </img>
+            </a>
+        </ul>
+    </script>
+
+
+    <script src="{% static 'bundles/main.js' %}"></script>
+</body>
+
+</html>
