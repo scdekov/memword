@@ -18,52 +18,49 @@ class PageVM {
 
     load () {
         fetch('/api/targets/')
-            .then(data => {
-                data.json().then(jsonData => {
-                    this.targets(jsonData.map(targetData => {
-                        return new Target(targetData)
-                    }))
-                })
+            .then(data => data.json())
+            .then(jsonData => {
+                this.targets(jsonData.map(targetData => {
+                    return new Target(targetData)
+                }))
             })
     }
 
-    activate (target) {
+    activateTarget (target) {
         this.active(target)
     }
 
     onNewTarget (target) {
         this.targets.push(target)
-        this.activate(target)
+        this.activateTarget(target)
     }
 
-    remove (target) {
-        fetch(`/api/targets/${target.id}/`, {
-            method: 'DELETE'
-        }).then(() => {
+    removeTarget (target) {
+        target.delete().then(() => {
             this.targets.remove(target)
             this.active(this.newTarget)
         })
     }
 
-    update (target) {
-        fetch(`/api/targets/${target.id}/`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                identifier: ko.unwrap(target.identifier)
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+    saveTarget (target) {
+        target.save()
+    }
+
+    setTargetDefaultDescription (target) {
+        Scout.getMeaning(target.identifier())
+            .then(meaning => {
+                target.description(meaning)
+            })
     }
 }
 
 class NewTarget {
     constructor () {
-        this.links = ko.observableArray()
-        this.q = ko.observable()
-        this.description = ko.observable()
         this.loading = ko.observable(false)
+
+        this.q = ko.observable()
+        this.links = ko.observableArray()
+        this.description = ko.observable()
         this.selectedLink = ko.observable()
         this.allowCreate = ko.computed(() => this.q() && (this.selectedLink() || this.description()))
     }

@@ -16,7 +16,7 @@
         <ul class="targets" data-bind="foreach: targets">
             <li>
                 <a href="#" data-bind="text: identifier,
-                                       click: $parent.activate.bind($parent, $data),
+                                       click: $parent.activateTarget.bind($parent, $data),
                                        css: {'active': $parent.active() === $data}">
                 </a>
             </li>
@@ -34,23 +34,18 @@
                                               if: active() !== newTarget},
                                               visible: active() !== newTarget"
              style="display: none">
-            <form data-bind="submit: save">
+            <form data-bind="submit: $parent.saveTarget.bind($parent, $data)">
                 <input class="search" data-bind="value: identifier"/>
-                <button data-bind="click: $parent.update.bind($parent, $data)">SAVE</button>
-                <button data-bind="click: $parent.remove.bind($parent, $data)">DELETE</button>
-                <input type="submit" style="position: absolute; left: -9999px"/>
+                <textarea rows="4" cols="50" class="search" placeholder="description"
+                            data-bind="value: description"></textarea>
+                <div>
+                    <a href="#" class="close" data-bind="click: imgLink.bind($data, ''), visible: imgLink"></a>
+                    <img height="300" data-bind="attr: {src: imgLink}, visible: imgLink"></img>
+                </div>
+
+                <input type="submit" value="SAVE"/>
             </form>
-            <div data-bind="foreach: associations">
-                <form data-bind="submit: $parent.saveAssociation.bind($parent, $data)">
-                    <textarea rows="4" cols="50" class="search" placeholder="description"
-                              data-bind="value: description"></textarea>
-                    <div>
-                        <a href="#" class="close" data-bind="click: imgLink.bind($data, ''), visible: imgLink"></a>
-                        <img height="300" data-bind="attr: {src: imgLink}, visible: imgLink"></img>
-                    </div>
-                    <input type="submit" value="SAVE"/>
-                </form>
-            </div>
+            <button data-bind="click: $parent.removeTarget.bind($parent, $data)">DELETE</button>
         </div>
     </div>
 
