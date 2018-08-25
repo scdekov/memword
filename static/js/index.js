@@ -69,15 +69,29 @@ class NewTarget {
 
     search () {
         this.loading(true)
+        Promise.all([this.loadImages(this.q()), this.loadMeaning(this.q())])
+            .then(this.loading.bind(this, false))
 
-        fetch(`api/images?q=${encodeURIComponent(this.q())}`).then(resp => {
-            resp.json().then(json => {
-                this.links(json.images.slice(0, 10).map(item => {
-                    return item.link
-                }))
-                this.loading(false)
+    }
+
+    loadImages (q) {
+        return fetch(`api/images?q=${encodeURIComponent(q)}`)
+            .then(resp => {
+                resp.json().then(json => {
+                    this.links(json.images.slice(0, 10).map(item => {
+                        return item.link
+                    }))
+                })
             })
-        })
+    }
+
+    loadMeaning (q) {
+        return fetch(`api/meanings?q=${encodeURIComponent(q)}`)
+            .then(resp => {
+                resp.json().then(json => {
+                    this.description(json.meanings[0].description)
+                })
+            })
     }
 
     add () {
