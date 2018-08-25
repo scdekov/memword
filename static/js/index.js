@@ -2,13 +2,13 @@ import '../css/style'
 
 import ko from 'knockout'
 import Arbiter from 'promissory-arbiter'
-import {Association, Target} from 'data'
+import {Target} from 'data'
 
 class PageVM {
     constructor () {
         this.newTarget = new NewTarget()
         this.targets = ko.observableArray()
-        this.active = ko.observable(this.newTarget);
+        this.active = ko.observable(this.newTarget)
 
         this.load()
 
@@ -37,8 +37,8 @@ class PageVM {
 
     remove (target) {
         fetch(`/api/targets/${target.id}/`, {
-            method: 'DELETE',
-        }).then((resp) => {
+            method: 'DELETE'
+        }).then(() => {
             this.targets.remove(target)
             this.active(this.newTarget)
         })
@@ -48,9 +48,9 @@ class PageVM {
         fetch(`/api/targets/${target.id}/`, {
             method: 'PATCH',
             body: JSON.stringify({
-                identifier: ko.unwrap(target.identifier),
+                identifier: ko.unwrap(target.identifier)
             }),
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             }
         })
@@ -71,7 +71,6 @@ class NewTarget {
         this.loading(true)
         Promise.all([this.loadImages(this.q()), this.loadMeaning(this.q())])
             .then(this.loading.bind(this, false))
-
     }
 
     loadImages (q) {
@@ -102,7 +101,7 @@ class NewTarget {
                 identifier: this.q(),
                 description: this.description()
             }),
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             }
         }).then((resp) => {

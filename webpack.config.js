@@ -1,4 +1,5 @@
 const path = require('path')
+const WebpackNotifierPlugin = require('webpack-notifier')
 
 module.exports = {
     entry: './static/js/index.js',
@@ -11,7 +12,7 @@ module.exports = {
     module: {
         rules: [{
             test: /\.js$/,
-            exclude: /(node_modules|bower_components)/,
+            exclude: /(node_modules)/,
             use: {
                 loader: 'babel-loader',
                 options: {
@@ -27,6 +28,11 @@ module.exports = {
             }, {
                 loader: "less-loader" // compiles Less to CSS
             }]
+        }, {
+            enforce: 'pre',
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'eslint-loader'
         }]
     },
 
@@ -34,6 +40,10 @@ module.exports = {
         extensions: ['.less', '.js'],
         modules: [path.resolve(__dirname, 'static', 'js'), 'node_modules']
     },
+
+    plugins: [
+        new WebpackNotifierPlugin()
+    ],
 
     devtool: 'inline-source-map'
 }

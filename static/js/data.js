@@ -28,7 +28,7 @@ export class Target {
                 description: ko.unwrap(association.description),
                 img_link: ko.unwrap(association.imgLink)
             }),
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             }
         })
