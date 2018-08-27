@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <!doctype html>
 <html lang="">
 
@@ -45,18 +46,21 @@
 
                 <input type="submit" value="SAVE"/>
             </form>
+            <button data-bind="click: $parent.setTargetDefaultDescription.bind($parent, $data)">SET DEFAULT DESCRIPTION</button>
             <button data-bind="click: $parent.removeTarget.bind($parent, $data)">DELETE</button>
         </div>
     </div>
 
 
     <script type="text/html" id="new-target">
-        <form data-bind="submit: search">
-            <input class="search" data-bind="value: q"/>
+        <form>
+            <input class="search" data-bind="textInput: q" autofocus/>
+            <div data-bind="visible: queryCorrection() && !loading()">
+                Did you mean <a href="#" data-bind="click: correctQuery.bind($data), text: queryCorrection"></a>
+            </div>
             <textarea rows="4" cols="50" class="search" placeholder="description"
                       data-bind="value: description"/></textarea>
             <div class="lds-hourglass" data-bind="style : { visibility : loading() ? '' : 'hidden'  }"></div>
-            <input type="submit" style="position: absolute; left: -9999px"/>
             <button class="add-target" data-bind="visible: allowCreate, click: add">ADD</button>
         </form>
 

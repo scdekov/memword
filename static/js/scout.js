@@ -1,29 +1,34 @@
 export class Scout {
-    static imagesCache = {}
+    static googleCache = {}
     static meaningsCache = {}
 
     static getMeaning = q => {
         if (q in Scout.meaningsCache) {
-            return Promise.resolve(Scout.meaningsCache[q])
+            return Scout.meaningsCache[q]
         }
-        return fetch(`api/meanings?q=${encodeURIComponent(q)}`)
+        return (Scout.meaningsCache[q] = fetch(`api/meanings?q=${encodeURIComponent(q)}`)
             .then(resp => resp.json())
             .then(json => {
-                Scout.meaningsCache[q] = json.meanings[0].description
-                return Scout.meaningsCache[q]
-            })
+                return json.meanings[0].description
+            }))
     }
 
     static getImages = q => {
-        if (q in Scout.imagesCache) {
-            return Promise.resolve(Scout.imagesCache[q])
+        return Scout._googleSearch(q)
+            .then(json => json.images.map(img => img.link))
+    }
+
+    static getCorrectQuery = q => {
+        return Scout._googleSearch(q)
+            .then(json => json.query_correction)
+    }
+
+    static _googleSearch = q => {
+        if (q in Scout.googleCache) {
+            return Scout.googleCache[q]
         }
 
-        return fetch(`api/images?q=${encodeURIComponent(q)}`)
-            .then(resp => resp.json())
-            .then(json => {
-                Scout.imagesCache[q] = json.images.map(image => image.link)
-                return Scout.imagesCache[q]
-            })
+        return (Scout.googleCache[q] = fetch(`api/images?q=${encodeURIComponent(q)}`)
+            .then(resp => resp.json()))
     }
 }

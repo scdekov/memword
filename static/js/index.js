@@ -59,16 +59,21 @@ class NewTarget {
         this.loading = ko.observable(false)
 
         this.q = ko.observable()
+        this.queryCorrection = ko.observable()
         this.links = ko.observableArray()
         this.description = ko.observable()
         this.selectedLink = ko.observable()
         this.allowCreate = ko.computed(() => this.q() && (this.selectedLink() || this.description()))
-    }
 
-    search () {
-        this.loading(true)
-        Promise.all([this.loadImages(this.q()), this.loadMeaning(this.q())])
-            .then(this.loading.bind(this, false))
+        this.search = ko.pureComputed(() => {
+            if (!this.q()) { return }
+            this.loading(true)
+            Promise.all([
+                this.loadCorrectQuery(this.q()),
+                this.loadImages(this.q()),
+                this.loadMeaning(this.q())
+            ]).finally(this.loading.bind(this, false))
+        }).extend({throttle: 1000})
     }
 
     loadImages (q) {
@@ -83,6 +88,17 @@ class NewTarget {
             .then(meaning => {
                 this.description(meaning)
             })
+    }
+
+    loadCorrectQuery (q) {
+        return Scout.getCorrectQuery(q)
+            .then(correct => {
+                this.queryCorrection((correct && correct !== q) ? correct : '')
+            })
+    }
+
+    correctQuery () {
+        this.q(this.queryCorrection())
     }
 
     add () {
