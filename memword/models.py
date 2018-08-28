@@ -13,8 +13,9 @@ class Repetition(models.Model):
 
     target = models.ForeignKey('memword.Target', on_delete=models.CASCADE)
     source_type = models.CharField(choices=SOURCE_TYPES, max_length=max(map(lambda st: len(st[0]), SOURCE_TYPES)))
-    confidence_level = models.IntegerField(help_text='This should be between 1 and 10')
+    confidence_level = models.IntegerField(help_text='This should be between 1 and 10', null=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    scheduled_for = models.DateTimeField()
     # these two may not make sense for all source types?
     date_seen = models.DateTimeField(null=True)
     date_sent = models.DateTimeField(null=True)
@@ -32,3 +33,6 @@ class Target(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
+
+    def need_notification(self):
+        return self.repetition_set.order_by('-id').first().date_seen
