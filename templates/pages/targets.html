@@ -1,0 +1,29 @@
+<script type="text/html" id="targets-page">
+    <a href="#" data-bind="click: function () { active(newTargetForm) }">NEW</a>
+    <ul class="targets" data-bind="foreach: targets">
+        <li>
+            <a href="#" data-bind="text: identifier,
+                                    click: $parent.activateTarget.bind($parent, $data),
+                                    css: {'active': $parent.active() === $data}">
+            </a>
+        </li>
+    </ul>
+
+    <div class="new-target" data-bind="template: {
+                                            name: 'new-target',
+                                            data: newTargetForm,
+                                            if: active() === newTargetForm,
+                                        }, visible: active() === newTargetForm">
+    </div>
+
+    <div class="active-target" data-bind="template: {
+                                                data: active,
+                                                if: active() !== newTargetForm,
+                                                name: 'active-target'
+                                            },
+                                            visible: active() !== newTargetForm"
+            style="display: none"></div>
+
+    {% include 'forms/new-target.html' %}
+    {% include 'forms/active-target.html' %}
+</script>

@@ -1,0 +1,30 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+    <div class="top-menu">
+        <a class="menu-link" href="#" data-bind="click: activePage.bind($data, targetsPage)">TARGETS</a>
+        <a class="menu-link" href="#" data-bind="click: activePage.bind($data, lessonsPage)">LESSONS</a>
+    </div>
+
+    <div class="main-content">
+        <div data-bind="template: {name: activePage().templateName, data: activePage()}"></div>
+    </div>
+
+    {% include 'pages/targets.html' %}
+    {% include 'pages/lessons.html' %}
+
+    <script src="{% static 'bundles/main.js' %}"></script>
+</body>
+
+</html>

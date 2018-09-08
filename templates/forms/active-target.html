@@ -1,0 +1,15 @@
+<script type="text/html" id="active-target">
+    <form data-bind="submit: $parent.saveTarget.bind($parent, $data)">
+        <input class="search" data-bind="value: identifier"/>
+        <textarea rows="4" cols="50" class="search" placeholder="description"
+                    data-bind="value: description"></textarea>
+        <div>
+            <a href="#" class="close" data-bind="click: imgLink.bind($data, ''), visible: imgLink"></a>
+            <img height="300" data-bind="attr: {src: imgLink}, visible: imgLink"></img>
+        </div>
+
+        <input type="submit" value="SAVE"/>
+    </form>
+    <button data-bind="click: $parent.setTargetDefaultDescription.bind($parent, $data)">SET DEFAULT DESCRIPTION</button>
+    <button data-bind="click: $parent.removeTarget.bind($parent, $data)">DELETE</button>
+</script>
