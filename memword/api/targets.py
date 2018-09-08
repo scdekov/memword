@@ -1,7 +1,6 @@
-from rest_framework import serializers, viewsets, decorators, status
-from rest_framework.response import Response
+from rest_framework import serializers, viewsets
 
-from memword.models import Target
+from memword.models.target import Target
 
 
 class TargetSerializer(serializers.ModelSerializer):

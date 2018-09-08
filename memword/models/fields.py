@@ -5,7 +5,8 @@ from django.core import exceptions
 class ConfidenceLevelField(models.IntegerField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('null', True)
-        kwargs.setdefault('helptext', 'This should be between 1 and 10')
+        kwargs.setdefault('help_text', 'This should be between 1 and 10')
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         result = super().to_python(value)

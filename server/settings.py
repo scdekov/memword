@@ -42,6 +42,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
+    'django_extensions',
+
     'memword',
     'scout'
 ]
