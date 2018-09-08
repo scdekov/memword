@@ -1,12 +1,7 @@
-from rest_framework import serializers, viewsets
+from rest_framework import viewsets
 
+from memword.api.serializers import TargetSerializer
 from memword.models.target import Target
-
-
-class TargetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Target
-        fields = ('id', 'identifier', 'description', 'img_link', 'author_id')
 
 
 class TargetsViewSet(viewsets.ModelViewSet):
