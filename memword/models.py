@@ -11,7 +11,7 @@ class Repetition(models.Model):
         (SOURCE_TYPE_NOTIFICATION, 'Notification')
     )
 
-    target = models.ForeignKey('memword.Target', on_delete=models.CASCADE)
+    target = models.ForeignKey('memword.Target', on_delete=models.CASCADE, related_name='repetitions')
     source_type = models.CharField(choices=SOURCE_TYPES, max_length=max(map(lambda st: len(st[0]), SOURCE_TYPES)))
     confidence_level = models.IntegerField(help_text='This should be between 1 and 10', null=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -30,17 +30,17 @@ class Target(models.Model):
     identifier = models.CharField(max_length=1024, blank=True)
     description = models.CharField(max_length=1024, blank=True)
     img_link = models.URLField(max_length=512, blank=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='targets')
     date_created = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
 
     def need_notification(self):
-        return self.repetition_set.order_by('-id').first().date_seen
+        return self.repetitions.order_by('-id').first().date_seen
 
 
 class UserLearningMeta(models.base.ModelBase):
     def __new__(cls, clsname, bases, dct):
-        newclass =  super(UserLearningMeta, cls).__new__(cls, clsname, bases, dct)
+        newclass = super(UserLearningMeta, cls).__new__(cls, clsname, bases, dct)
         for interval_number in range(newclass.LAST_PERIOD_NUMBER):
             field = models.IntegerField(help_text='in seconds', null=True)
             newclass.add_to_class('%s_%s' % (interval_number, interval_number + 1), field)

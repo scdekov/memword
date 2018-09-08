@@ -124,6 +124,7 @@ class NewTarget {
         this.q('')
         this.selectedLink('')
         this.links([])
+        this.description('')
     }
 }
 

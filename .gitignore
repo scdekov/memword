@@ -5,3 +5,4 @@ server/credentials.py
 venv
 *.pyc
 static/bundles/*
+*~
