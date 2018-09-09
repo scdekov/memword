@@ -4,12 +4,14 @@
         <input type="datetime-local" placeholder="start" data-bind="value: plannedStartTime">
         <input type="number" placeholder="duration" data-bind="value: expectedDuration">
 
-        <div data-bind="foreach: $parent.targets">
-            <label>
-                <span data-bind="text: identifier"></span>
-                <input type="checkbox" data-bind="value: id, checked: $parent.targetIds">
-            </label>
-        </div>
+        <ul data-bind="foreach: $parent.targets">
+            <li>
+                <label>
+                    <span data-bind="text: identifier"></span>
+                    <input type="checkbox" data-bind="value: id, checked: $parent.targetIds">
+                </label>
+            </li>
+        </ul>
 
         <input type="submit" value="submit">
     </form>

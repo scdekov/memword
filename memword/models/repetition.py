@@ -2,7 +2,7 @@ from django.db import models
 
 from memword.models.fields import ConfidenceLevelField
 
- 
+
 class Repetition(models.Model):
     SOURCE_TYPE_EXAM = 'exam'
     SOURCE_TYPE_NOTIFICATION = 'notification'
