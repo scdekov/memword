@@ -1,5 +1,11 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.dispatch import receiver
+
+
+User = get_user_model()
 
 
 class UserLearningMeta(models.base.ModelBase):
@@ -42,3 +48,9 @@ class UserLearningIntervals(models.Model, metaclass=UserLearningMeta):
     @classmethod
     def get_default_intervals(cls):
         return cls.objects.get(id=cls.DEFAULT_ROW_ID)
+
+
+@receiver(post_save, sender=User)
+def create_user_interval(sender, user, **kwargs):
+    if not user.id:
+        UserLearningIntervals.objects.create(user=user)
