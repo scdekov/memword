@@ -30,7 +30,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ('id', 'student_id', 'questions', 'lesson_type', 'start_time',
-                  'end_time', 'expected_duration', 'title', 'target_ids')
+                  'end_time', 'expected_duration', 'title', 'target_ids', 'planned_start_time')
 
     questions = QuestionSerializer(many=True, read_only=True)
     lesson_type = serializers.CharField(allow_blank=True, default=Lesson.TYPES[0][0])

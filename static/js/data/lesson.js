@@ -30,6 +30,7 @@ export class Lesson {
         this.title = ko.observable()
         this.lessonType = ko.observable()
         this.startTime = ko.observable()
+        this.plannedStartTime = ko.observable()
         this.endTime = ko.observable()
         this.expectedDuration = ko.observable()
         this.questions = ko.observableArray()
@@ -73,7 +74,7 @@ export class Lesson {
     _getData () {
         return {
             lesson_type: this.lessonType(),
-            start_time: this.startTime(),
+            planned_start_time: this.plannedStartTime(),
             end_time: this.endTime(),
             expected_duration: this.expectedDuration(),
             target_ids: this.targetIds()

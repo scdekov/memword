@@ -29,7 +29,8 @@ class Lesson(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='lessons')
     targets = models.ManyToManyField('memword.Target', through='memword.Question')
     lesson_type = models.CharField(max_length=32, choices=TYPES)
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(null=True, blank=True)
+    planned_start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True, blank=True)
     expected_duration = models.DurationField()
 
