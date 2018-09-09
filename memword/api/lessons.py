@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers, viewsets, decorators
@@ -65,3 +67,11 @@ class LessonsViewSet(viewsets.ModelViewSet):
         # TODO: check if this is the last question and finzlie lesson if so
 
         return Response({'question': QuestionSerializer(question).data})
+
+    @decorators.detail_route(methods=['POST'], url_path='@start')
+    def start(self, request, **kwargs):
+        lesson = self.get_object()
+        lesson.start_time = datetime.now()
+        lesson.save()
+
+        return Response({'lesson': LessonSerializer(lesson).data})

@@ -44,4 +44,4 @@ class Lesson(models.Model):
             self.title = self._build_default_title()
 
     def _build_default_title(self):
-        return 'Lesson %s' % datetime.now()
+        return 'Lesson planned for %s' % self.planned_start_time

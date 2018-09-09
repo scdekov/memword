@@ -4,8 +4,9 @@ import {handleAPIResponse} from 'utils'
 class LessonVM {
     constructor (data) {
         this.lesson = data.lesson
-        this.finished = ko.observable(false)
         this.activeQuestion = ko.observable(this._getFirstUnAnsweredQuestion())
+        this.started = ko.computed(() => this.lesson.startTime())
+        this.finished = ko.observable(!this.activeQuestion()) // this should be !!endTime
     }
 
     answerQuestion (confidenceLevel) {
@@ -23,6 +24,16 @@ class LessonVM {
             .then(respJSON => {
                 console.log(respJSON) // TODO: load into the question
                 this._moveToNextQuestion()
+            })
+    }
+
+    start () {
+        fetch(`/api/lessons/${ko.unwrap(this.lesson.id)}/@start/`, {
+            method: 'POST'
+        })
+            .then(handleAPIResponse)
+            .then(respJSON => {
+                this.lesson.startTime(respJSON.lesson.start_time)
             })
     }
 
