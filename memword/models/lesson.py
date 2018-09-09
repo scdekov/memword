@@ -10,8 +10,8 @@ class Question(models.Model):
     class Meta:
         unique_together = ('lesson', 'target')
 
-    lesson = models.ForeignKey('memword.Lesson', on_delete=models.CASCADE)
-    target = models.ForeignKey('memword.Target', on_delete=models.CASCADE)
+    lesson = models.ForeignKey('memword.Lesson', on_delete=models.CASCADE, related_name='questions')
+    target = models.ForeignKey('memword.Target', on_delete=models.CASCADE, related_name='questions')
     passed = models.BooleanField(default=False)
     correct = models.NullBooleanField()
     confidence_level = ConfidenceLevelField()
@@ -27,11 +27,15 @@ class Lesson(models.Model):
 
     title = models.CharField(max_length=128, blank=True)
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='lessons')
-    questions = models.ManyToManyField('memword.Target', related_name='lesson_questions', through=Question)
+    targets = models.ManyToManyField('memword.Target', through='memword.Question')
     lesson_type = models.CharField(max_length=32, choices=TYPES)
     start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    end_time = models.DateTimeField(null=True, blank=True)
     expected_duration = models.DurationField()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     def clean(self):
         super().clean()
