@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.shortcuts import get_object_or_404
 
-from rest_framework import serializers, viewsets, decorators
+from rest_framework import serializers, viewsets, decorators, status
 from rest_framework.response import Response
 
 from memword.api.serializers import TargetSerializer
@@ -35,7 +35,7 @@ class LessonSerializer(serializers.ModelSerializer):
                   'end_time', 'expected_duration', 'title', 'target_ids', 'planned_start_time')
 
     questions = QuestionSerializer(many=True, read_only=True)
-    lesson_type = serializers.CharField(allow_blank=True, default=Lesson.TYPES[0][0])
+    lesson_type = serializers.CharField(allow_blank=True, default=Lesson.TYPE_LECTURE)
     target_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
 
     def save(self):
@@ -75,3 +75,19 @@ class LessonsViewSet(viewsets.ModelViewSet):
         lesson.save()
 
         return Response({'lesson': LessonSerializer(lesson).data})
+
+    @decorators.detail_route(methods=['POST'], url_path='@duplicate')
+    def duplicate(self, request, **kwargs):
+        original_lesson = self.get_object()
+
+        # this is suposed to be in atomic transactions
+        new_lesson = Lesson.objects.create(student_id=request.user.id or 1,
+                                           lesson_type=original_lesson.lesson_type,
+                                           expected_duration=original_lesson.expected_duration,
+                                           planned_start_time=datetime.now())
+        # start time should be calculated somehow
+
+        for question in original_lesson.questions.all():
+            Question.objects.create(target_id=question.target_id, lesson_id=new_lesson.id)
+
+        return Response({'lesson': LessonSerializer(new_lesson).data}, status=status.HTTP_201_CREATED)

@@ -9,6 +9,11 @@
         <button data-bind="click: start">START</button>
     </div>
 
+    <div data-bind="visible: finished">
+        <p>This lesson had finished. If you want to take it again click duplicate button.</p>
+        <button data-bind="click: $parents[1].duplicate">DUPLICATE</button>
+    </div>
+
     <div data-bind="template: {
         data: activeQuestion() && activeQuestion().target,
         if: started() && !finished()
