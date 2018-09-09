@@ -1,0 +1,19 @@
+<script type="text/html" id="active-lesson">
+    <lesson params="lesson: $data"></lesson>
+</script>
+
+<script type="text/html" id="lesson">
+    <div data-bind="template: {data: activeQuestion().target, if: activeQuestion}">
+        <h4 data-bind="text: identifier"></h4>
+        <div data-bind="text: description"></div>
+        <img height="300" data-bind="attr: {src: imgLink}, visible: imgLink"></img>
+
+        <div>
+            <p>How easy was that?</p>
+            <button data-bind="click: $parent.answerQuestion.bind($parent, 1)">GG</button>
+            <button data-bind="click: $parent.answerQuestion.bind($parent, 3)">Need more</button>
+            <button data-bind="click: $parent.answerQuestion.bind($parent, 6)">easy</button>
+            <button data-bind="click: $parent.answerQuestion.bind($parent, 9)">EZ</button>
+        </div>
+    </div>
+</script>

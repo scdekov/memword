@@ -1,6 +1,6 @@
 import ko from 'knockout'
-import { Target } from './target';
-import { isEmptry } from 'data/utils'
+import {Target} from './target'
+import {isEmpty, handleAPIResponse} from 'utils'
 
 class Question {
     constructor (data = {}) {
@@ -10,7 +10,7 @@ class Question {
         this.correct = ko.observable()
         this.confidenceLevel = ko.observable()
 
-        if (!isEmptry(data)) {
+        if (!isEmpty(data)) {
             this._load(data)
         }
     }
@@ -27,13 +27,15 @@ class Question {
 export class Lesson {
     constructor (data = {}) {
         this.id = ko.observable()
+        this.title = ko.observable()
         this.lessonType = ko.observable()
         this.startTime = ko.observable()
         this.endTime = ko.observable()
         this.expectedDuration = ko.observable()
         this.questions = ko.observableArray()
+        this.targetIds = ko.observableArray()
 
-        if (!isEmptry(data)) {
+        if (!isEmpty(data)) {
             this._load(data)
         }
     }
@@ -41,9 +43,40 @@ export class Lesson {
     _load (data) {
         this.id(data.id)
         this.lessonType(data.lesson_type)
+        this.title(data.title)
         this.startTime(data.start_time)
         this.endTime(data.end_time)
         this.expectedDuration(data.expected_duration)
         this.questions(data.questions.map(q => new Question(q)))
+    }
+
+    save () {
+        let isCreate = !this.id()
+        let method = 'POST'
+        let url = '/api/lessons/'
+        if (!isCreate) {
+            method = 'PATCH'
+            url += `${this.id()}/`
+        }
+
+        return fetch(url, {
+            method: method,
+            body: JSON.stringify(this._getData()),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(handleAPIResponse)
+            .then(this._load.bind(this), console.error)
+    }
+
+    _getData () {
+        return {
+            lesson_type: this.lessonType(),
+            start_time: this.startTime(),
+            end_time: this.endTime(),
+            expected_duration: this.expectedDuration(),
+            target_ids: this.targetIds()
+        }
     }
 }

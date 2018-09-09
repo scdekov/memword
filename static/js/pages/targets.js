@@ -1,30 +1,17 @@
 import ko from 'knockout'
 import Arbiter from 'promissory-arbiter'
-import {Target} from 'data/target'
 import {NewTargetForm} from 'forms/target'
 import {Scout} from 'scout'
 
 export class TargetsPage {
-    constructor () {
+    constructor (context) {
         this.templateName = 'targets-page'
         this.newTargetForm = new NewTargetForm()
 
-        this.targets = ko.observableArray()
+        this.targets = context.targets
         this.active = ko.observable(this.newTargetForm)
 
-        this.load()
-
         Arbiter.subscribe('new-target', this.onNewTarget.bind(this))
-    }
-
-    load () {
-        fetch('/api/targets/')
-            .then(data => data.json())
-            .then(jsonData => {
-                this.targets(jsonData.map(targetData => {
-                    return new Target(targetData)
-                }))
-            })
     }
 
     activateTarget (target) {

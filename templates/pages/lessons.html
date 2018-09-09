@@ -1,1 +1,23 @@
-<script type="text/html" id="lessons-page"></script>
+<script type="text/html" id="lessons-page">
+    <div class="lessons-page">
+        <div class="lessons-list">
+            <a href="#" data-bind="click: activate.bind($data, newLessonForm)">NEW</a>
+
+            <ul data-bind="foreach: lessons">
+                <li>
+                    <a data-bind="click: $parent.active.bind($parent, $data),
+                                text: title"
+                        href="#" ></a>
+                </li>
+            </ul>
+        </div>
+
+        <div data-bind="template: {
+            name: active().templateName || 'active-lesson',
+            data: active(),
+        }" class="active-lesson"></div>
+    </div>
+
+    {% include 'forms/new-lesson.html' %}
+    {% include 'lesson.html' %}
+</script>

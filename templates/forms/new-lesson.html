@@ -1,0 +1,16 @@
+<script type="text/html" id="new-lesson-form">
+    <form data-bind="submit: save, with: lesson">
+        <input type="text" placeholder="Title" data-bind="value: title">
+        <input type="datetime-local" placeholder="start" data-bind="value: startTime">
+        <input type="number" placeholder="duration" data-bind="value: expectedDuration">
+
+        <div data-bind="foreach: $parent.targets">
+            <label>
+                <span data-bind="text: identifier"></span>
+                <input type="checkbox" data-bind="value: id, checked: $parent.targetIds">
+            </label>
+        </div>
+
+        <input type="submit" value="submit">
+    </form>
+</script>
