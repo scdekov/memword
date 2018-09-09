@@ -4,7 +4,8 @@ import {handleAPIResponse} from 'utils'
 class LessonVM {
     constructor (data) {
         this.lesson = data.lesson
-        this.activeQuestion = ko.observable(this.lesson.questions()[0])
+        this.finished = ko.observable(false)
+        this.activeQuestion = ko.observable(this._getFirstUnAnsweredQuestion())
     }
 
     answerQuestion (confidenceLevel) {
@@ -25,8 +26,18 @@ class LessonVM {
             })
     }
 
-    _moveToNextQuestion () {
+    _getFirstUnAnsweredQuestion () {
+        return this.lesson.questions().find(q => !ko.unwrap(q.passed))
+    }
 
+    _moveToNextQuestion () {
+        let activeQuestionIndex = this.lesson.questions().indexOf(this.activeQuestion())
+        if (activeQuestionIndex === this.lesson.questions().length - 1) {
+            this.finished(true)
+            this.activeQuestion(null)
+        } else {
+            this.activeQuestion(this.lesson.questions()[activeQuestionIndex + 1])
+        }
     }
 }
 

@@ -59,6 +59,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
 
         question = get_object_or_404(Question, lesson_id=pk, id=serializer.validated_data['question_id'])
         question.confidence_level = serializer.validated_data['confidence_level']
+        question.passed = True
         question.save()
 
         # TODO: check if this is the last question and finzlie lesson if so
