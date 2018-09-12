@@ -18,6 +18,7 @@ export class LessonsPage {
 
     duplicate (lesson) {
         fetch(`/api/lessons/${ko.unwrap(lesson.id)}/@duplicate/`, {
+            method: 'POST'
         })
             .then(handleAPIResponse)
             .then(respJSON => {
