@@ -3,8 +3,10 @@ export function isEmpty (something) {
 }
 
 export function handleAPIResponse (resp) {
-    if (!resp.ok) {
-        return resp.json().then(data => Promise.reject(data))
-    }
-    return resp.json()
+    const contentType = resp.headers.get('content-type')
+    var isJSON = contentType && contentType.indexOf('application/json') !== -1
+
+    var nextResponse = isJSON ? resp.json() : resp.text()
+
+    return resp.ok ? nextResponse : nextResponse.then(data => Promise.reject(data))
 }

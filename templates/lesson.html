@@ -11,7 +11,7 @@
 
     <div data-bind="visible: finished">
         <p>This lesson had finished. If you want to take it again click duplicate button.</p>
-        <button data-bind="click: $parents[1].duplicate">DUPLICATE</button>
+        <button data-bind="click: $parents[1].duplicate.bind($parents[1], lesson)">DUPLICATE</button>
     </div>
 
     <div data-bind="template: {

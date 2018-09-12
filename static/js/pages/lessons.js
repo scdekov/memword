@@ -16,15 +16,25 @@ export class LessonsPage {
         this.active(lesson)
     }
 
-    duplicate () {
-        fetch(`/api/lessons/${ko.unwrap(this.lesson.id)}/@duplicate/`, {
-            method: 'POST'
+    duplicate (lesson) {
+        fetch(`/api/lessons/${ko.unwrap(lesson.id)}/@duplicate/`, {
         })
             .then(handleAPIResponse)
             .then(respJSON => {
                 let lesson = new Lesson(respJSON.lesson)
                 this.lessons.push(lesson)
                 this.active(lesson)
+            })
+    }
+
+    delete (lesson) {
+        fetch(`/api/lessons/${ko.unwrap(lesson.id)}/`, {
+            method: 'DELETE'
+        })
+            .then(handleAPIResponse)
+            .then(() => {
+                this.active(this.newLessonForm)
+                this.lessons.remove(lesson)
             })
     }
 }
