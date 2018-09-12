@@ -51,6 +51,6 @@ class UserLearningIntervals(models.Model, metaclass=UserLearningMeta):
 
 
 @receiver(post_save, sender=User)
-def create_user_interval(sender, user, **kwargs):
-    if not user.id:
-        UserLearningIntervals.objects.create(user=user)
+def create_user_interval(sender, instance, **kwargs):
+    if not instance.id:
+        UserLearningIntervals.objects.create(user=instance)
