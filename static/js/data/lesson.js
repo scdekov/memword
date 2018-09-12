@@ -80,4 +80,12 @@ export class Lesson {
             target_ids: this.targetIds()
         }
     }
+
+    pickTopTargets () {
+        return fetch('/api/lessons/@get-top-targets')
+            .then(handleAPIResponse)
+            .then(respJSON => {
+                this.targetIds(respJSON.targets.map(target => target.id))
+            })
+    }
 }
