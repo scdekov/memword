@@ -34,8 +34,9 @@ class UserLearningIntervals(models.Model, metaclass=UserLearningMeta):
 
         if interval is None:
             self._populate_with_defaults()
+            return self.get_nth_interval(n)
 
-        return self.get_nth_interval(n)
+        return interval
 
     def _populate_with_defaults(self):
         default_row = self.get_default_intervals()

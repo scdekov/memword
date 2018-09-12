@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from memword.api.serializers import TargetSerializer
 from memword.models.lesson import Lesson, Question
+from memword.logic.target_picker import TargetPicker
 
 
 class SubmitQuestionSerializer(serializers.Serializer):
@@ -50,6 +51,10 @@ class LessonSerializer(serializers.ModelSerializer):
         return lesson
 
 
+class TopTargetsQuerySerializer(serializers.Serializer):
+    targets_count = serializers.IntegerField(required=False, default=10)
+
+
 class LessonsViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
@@ -91,3 +96,12 @@ class LessonsViewSet(viewsets.ModelViewSet):
             Question.objects.create(target_id=question.target_id, lesson_id=new_lesson.id)
 
         return Response({'lesson': LessonSerializer(new_lesson).data}, status=status.HTTP_201_CREATED)
+
+    @decorators.list_route(url_path='@get-top-targets')
+    def get_top_targets(self, request):
+        serializer = TopTargetsQuerySerializer(data=request.GET)
+        serializer.is_valid(raise_exception=True)
+
+        top_targets = TargetPicker.pick_top(request.user, serializer.validated_data['targets_count'])
+
+        return Response({'targets': TargetSerializer(top_targets, many=True).data})
