@@ -25,18 +25,25 @@ class UserLearningIntervals(models.Model, metaclass=UserLearningMeta):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     def get_nth_interval(self, n):
-        assert n > 0
-
-        if n < self.LAST_PERIOD_NUMBER:
-            interval = getattr(self, '%s_%s' % (n - 1, n), None)
-        else:
-            interval = getattr(self, '%s_%s' % (self.LAST_PERIOD_NUMBER - 1, self.LAST_PERIOD_NUMBER), None)
-
+        interval = getattr(self, self._get_interval_field(n))
         if interval is None:
             self._populate_with_defaults()
             return self.get_nth_interval(n)
 
         return interval
+
+    def increase_nth_interval(self, n, percent):
+        interval = self.get_nth_interval(n)
+        setattr(self, self._get_interval_field(n), int(interval + (interval * percent / 100)))
+        self.save()
+
+    def _get_interval_field(self, n):
+        assert n > 0
+
+        if n < self.LAST_PERIOD_NUMBER:
+            return '%s_%s' % (n - 1, n)
+
+        return '%s_%s' % (self.LAST_PERIOD_NUMBER - 1, self.LAST_PERIOD_NUMBER)
 
     def _populate_with_defaults(self):
         default_row = self.get_default_intervals()

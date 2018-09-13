@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from memword.api.serializers import TargetSerializer
 from memword.models.lesson import Lesson, Question
 from memword.logic.target_picker import TargetPicker
+from memword.logic.learning_intervals_manager import LearningIntervalsManager
 
 
 class SubmitQuestionSerializer(serializers.Serializer):
@@ -67,7 +68,10 @@ class LessonsViewSet(viewsets.ModelViewSet):
         question = get_object_or_404(Question, lesson_id=pk, id=serializer.validated_data['question_id'])
         question.confidence_level = serializer.validated_data['confidence_level']
         question.passed = True
+        question.pass_time = datetime.now()
         question.save()
+
+        LearningIntervalsManager.handle_submitted_question(question)
 
         # TODO: check if this is the last question and finzlie lesson if so
 
