@@ -11,6 +11,7 @@ class Question(models.Model):
     lesson = models.ForeignKey('memword.Lesson', on_delete=models.CASCADE, related_name='questions')
     target = models.ForeignKey('memword.Target', on_delete=models.CASCADE, related_name='questions')
     passed = models.BooleanField(default=False)
+    pass_time = models.DateTimeField(null=True)
     correct = models.NullBooleanField()
     confidence_level = ConfidenceLevelField()
 
