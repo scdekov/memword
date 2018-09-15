@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers, viewsets, decorators, status
@@ -9,6 +10,9 @@ from memword.api.serializers import TargetSerializer
 from memword.models.lesson import Lesson, Question
 from memword.logic.target_picker import TargetPicker
 from memword.logic.learning_intervals_manager import LearningIntervalsManager
+
+
+User = get_user_model()
 
 
 class SubmitQuestionSerializer(serializers.Serializer):
@@ -39,6 +43,8 @@ class LessonSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
     lesson_type = serializers.CharField(allow_blank=True, default=Lesson.TYPE_LECTURE)
     target_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    planned_start_time = serializers.DateTimeField(default=datetime.now)
+    expected_duration = serializers.DurationField(default='60')
 
     def save(self):
         target_ids = self.validated_data.pop('target_ids', [])
@@ -106,6 +112,11 @@ class LessonsViewSet(viewsets.ModelViewSet):
         serializer = TopTargetsQuerySerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
 
-        top_targets = TargetPicker.pick_top(request.user, serializer.validated_data['targets_count'])
+        # temp
+        user = request.user
+        if user.is_anonymous:
+            user = User.objects.first()
+
+        top_targets = TargetPicker.pick_top(user, serializer.validated_data['targets_count'])
 
         return Response({'targets': TargetSerializer(top_targets, many=True).data})
