@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -56,6 +58,18 @@ class UserLearningIntervals(models.Model, metaclass=UserLearningMeta):
     @classmethod
     def get_default_intervals(cls):
         return cls.objects.get(id=cls.DEFAULT_ROW_ID)
+
+    @classmethod
+    def adjust_default_row(cls):
+        defaults = cls.get_default_intervals()
+        for field in cls._meta.get_fields():
+            if not re.match(r'[0-9]+\_[0-9]+', field.name):
+                continue
+
+            avg = list(cls.objects.all().aggregate(models.Avg(field.name)).values())[0]
+            setattr(defaults, field.name, avg)
+
+        defaults.save()
 
 
 @receiver(post_save, sender=User)
