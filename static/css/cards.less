@@ -1,7 +1,6 @@
-@card-width:  350px;
+@card-width: 350px;
 @card-height: 450px;
 @card-border-radius: 10px;
-@card-text-color: #0c0c0ccf;
 
 .cards-container {
     flex: 1;
@@ -27,22 +26,36 @@
             left: 0;
             right: 0;
             top: 0;
+            width: 100%;
             z-index: 20;
             padding: 10px;
             font-size: 30px;
-            color: @card-text-color;
+            color: @font-color;
             text-transform: uppercase;
+        }
+
+        input.card-title {
+            height: 62px;
+            text-align: center;
+            z-index: 50;
+        }
+
+        textarea.card-body {
+            height: 165px;
+            resize: none;
+            text-align: center;
         }
 
         .card-body {
             position: absolute;
             left: 0;
             right: 0;
+            width: 100%;
             padding: 10px;
-            top: 50px;
+            top: 61px;
             font-size: 25px;
             z-index: 20;
-            color: @card-text-color;
+            color: @font-color;
 
             &.card-body-hoverable {
                 visibility: hidden;
@@ -55,18 +68,36 @@
             bottom: 0;
             height: 225px;
             width: @card-width;
+            display: flex;
+
+            .glyphicon {
+                background-color: #0c0c0c26;
+            }
         }
 
         .card-footer {
             .card-footer-mixin;
             border-bottom-left-radius: @card-border-radius;
             border-bottom-right-radius: @card-border-radius;
+
+
+            img {
+                height: 100%;
+                width: 100%;
+            }
+
+            .text-start {
+                text-align: start;
+            }
+
+            .text-end {
+                text-align: end;
+            }
         }
 
         .card-footer-hover {
             .card-footer-mixin;
             visibility: hidden;
-            display: flex;
         }
 
         .footer-left,
@@ -76,11 +107,10 @@
             justify-content: center;
             flex-direction: column;
             text-align: center;
-
         }
 
         &:hover {
-            .card-footer {
+            .card-footer-hover-blur {
                 filter: blur(3px);
             }
 

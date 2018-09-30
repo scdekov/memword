@@ -1,5 +1,7 @@
 import '../css/style'
 import 'ko-components/lesson'
+import 'ko-bindings/edit-target'
+import 'ko-bindings/img'
 
 import ko from 'knockout'
 import {TargetsPage} from 'pages/targets'

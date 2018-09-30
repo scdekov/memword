@@ -7,25 +7,48 @@
                 </a>
             </div>
             <!-- ko foreach: targets() -->
-            <div class="card">
-                <span class="card-title" data-bind="text: identifier"></span>
-                <span class="card-body" data-bind="text: description"></span>
-                <img class="card-footer" src="" data-bind="attr: {src: imgLink()}">
-                <div class="card-footer-hover">
-                    <div class="footer-left">
-                        <a href="#"><span class="glyphicon glyphicon-pencil circled-glyph" title="edit"></span></a>
-                    </div>
-                    <div class="footer-right">
-                        <a href="#" data-bind="click: $parent.removeTarget.bind($parent, $data)">
-                            <span class="glyphicon glyphicon-trash circled-glyph" title="delete"></span>
-                        </a>
+                <!-- ko if: $parent.active() && $parent.active().target === $data -->
+                <div class="card edit-target" data-bind="with: $parent.active()">
+                    <input class="card-title" data-bind="value: q"/>
+                    <textarea class="card-body" data-bind="value: description"></textarea>
+                    <img class="card-footer" data-bind="img: selectedLink">
+                    <div class="card-footer">
+                        <div class="footer-left text-start">
+                            <a href="#" data-bind="click: prevLink.bind($data), visible: hasPrevLink">
+                                <span class="glyphicon glyphicon-chevron-left" title="previous"></span>
+                            </a>
+                        </div>
+                        <div class="footer-right text-end">
+                            <a href="#" data-bind="click: nextLink.bind($data), visible: hasNextLink">
+                                <span class="glyphicon glyphicon-chevron-right" title="next"></span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <!-- /ko -->
+                <!-- ko if: !$parent.active() || $parent.active().target !== $data -->
+                <div class="card">
+                    <span class="card-title" data-bind="text: identifier"></span>
+                    <span class="card-body" data-bind="text: description"></span>
+                    <img class="card-footer card-footer-hover-blur" src="" data-bind="attr: {src: imgLink()}">
+                    <div class="card-footer-hover">
+                        <div class="footer-left">
+                            <a href="#" data-bind="editTarget">
+                                <span class="glyphicon glyphicon-pencil circled-glyph" title="edit"></span>
+                            </a>
+                        </div>
+                        <div class="footer-right">
+                            <a href="#" data-bind="click: $parent.removeTarget.bind($parent, $data)">
+                                <span class="glyphicon glyphicon-trash circled-glyph" title="delete"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
             <!-- /ko -->
         </div>
 
-        <!-- ko if: active() -->
+        <!-- ko if: false -->
         <div class="new-target" data-bind="template: {
                                                 name: 'new-target',
                                                 data: newTargetForm,

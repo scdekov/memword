@@ -5,24 +5,31 @@ import {Scout} from 'scout'
 import {Target} from 'data/target'
 import {fetchJSON} from 'utils'
 
-export class NewTargetForm extends BaseForm {
-    constructor () {
+export class EditTarget extends BaseForm {
+    constructor (target = {}) {
         super()
-        this.q = ko.observable()
+        this.target = target
+        this.q = target.identifier || ko.observable()
         this.queryCorrection = ko.observable()
         this.links = ko.observableArray()
-        this.description = ko.observable()
-        this.selectedLink = ko.observable()
+        this.description = target.description || ko.observable()
+        this.selectedLink = target.imgLink || ko.observable()
         this.allowCreate = ko.computed(() => this.q() && (this.selectedLink() || this.description()))
+        this.hasNextLink = ko.computed(() => this.links().indexOf(this.selectedLink()) < this.links().length - 1)
+        this.hasPrevLink = ko.computed(() => this.links().indexOf(this.selectedLink()))
 
         this.search = ko.pureComputed(() => {
             if (!this.q()) { return }
             this.loading(true)
-            Promise.all([
-                this.loadCorrectQuery(this.q()),
-                this.loadImages(this.q()),
-                this.loadMeaning(this.q())
-            ]).finally(this.loading.bind(this, false))
+
+            var loaders = [this.loadImages(this.q())]
+            if (!this.target) {
+                loaders.extend([
+                    this.loadCorrectQuery(this.q()),
+                    this.loadMeaning(this.q())
+                ])
+            }
+            Promise.all(loaders).finally(this.loading.bind(this, false))
         }).extend({throttle: 1000})
     }
 
@@ -30,6 +37,9 @@ export class NewTargetForm extends BaseForm {
         return Scout.getImages(q)
             .then(images => {
                 this.links(images)
+                if (this.selectedLink() && images.indexOf(this.selectedLink()) === -1) {
+                    this.links().push(this.selectedLink())
+                }
             })
     }
 
@@ -49,6 +59,16 @@ export class NewTargetForm extends BaseForm {
 
     correctQuery () {
         this.q(this.queryCorrection())
+    }
+
+    prevLink () {
+        let ix = this.links().indexOf(this.selectedLink())
+        this.selectedLink(this.links()[ix - 1])
+    }
+
+    nextLink () {
+        let ix = this.links().indexOf(this.selectedLink())
+        this.selectedLink(this.links()[ix + 1])
     }
 
     _save () {

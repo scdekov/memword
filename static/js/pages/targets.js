@@ -1,12 +1,10 @@
 import ko from 'knockout'
 import Arbiter from 'promissory-arbiter'
-import {NewTargetForm} from 'forms/target'
-import {Scout} from 'scout'
+import {EditTarget} from 'forms/target'
 
 export class TargetsPage {
     constructor (context) {
         this.templateName = 'targets-page'
-        this.newTargetForm = new NewTargetForm()
 
         this.targets = context.targets
         this.active = ko.observable()
@@ -15,7 +13,7 @@ export class TargetsPage {
     }
 
     activateTarget (target) {
-        this.active(target)
+        this.active(new EditTarget(target))
     }
 
     onNewTarget (target) {
@@ -26,18 +24,10 @@ export class TargetsPage {
     removeTarget (target) {
         target.delete().then(() => {
             this.targets.remove(target)
-            this.active(this.newTargetForm)
         })
     }
 
     saveTarget (target) {
         target.save()
-    }
-
-    setTargetDefaultDescription (target) {
-        Scout.getMeaning(target.identifier())
-            .then(meaning => {
-                target.description(meaning)
-            })
     }
 }

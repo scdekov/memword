@@ -1,6 +1,6 @@
 <script type="text/html" id="new-target">
     <form>
-        <input class="search" data-bind="textInput: q" autofocus/>
+        <input class="search" data-bind="textInput: q"/>
         <div data-bind="visible: queryCorrection() && !loading()">
             Did you mean <a href="#" data-bind="click: correctQuery.bind($data), text: queryCorrection"></a>
         </div>
