@@ -13,13 +13,15 @@ export function handleAPIResponse (resp) {
     return resp.ok ? nextResponse : nextResponse.then(data => Promise.reject(data))
 }
 
-export function authFetch (url, params = {}) {
+export function fetchJSON (url, params = {}) {
     let resultParams = copyObj(params)
-    if (!resultParams['headers']) {
-        resultParams['headers'] = {}
-    }
-    resultParams['headers']['X-CSRFToken'] = Cookie.get('csrftoken')
+    resultParams['headers'] = Object.assign({
+        'X-CSRFToken': Cookie.get('csrftoken'),
+        'Content-Type': 'application/json'
+    }, resultParams['headers'] || {})
+
     return fetch(url, resultParams)
+        .then(handleAPIResponse)
 }
 
 function copyObj (obj) {

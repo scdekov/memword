@@ -1,6 +1,6 @@
 import ko from 'knockout'
 import {NewLessonForm} from 'forms/lesson'
-import {handleAPIResponse, authFetch} from 'utils'
+import {fetchJSON} from 'utils'
 import {Lesson} from 'data/lesson'
 
 export class LessonsPage {
@@ -17,10 +17,9 @@ export class LessonsPage {
     }
 
     duplicate (lesson) {
-        authFetch(`/api/lessons/${ko.unwrap(lesson.id)}/@duplicate/`, {
+        fetchJSON(`/api/lessons/${ko.unwrap(lesson.id)}/@duplicate/`, {
             method: 'POST'
         })
-            .then(handleAPIResponse)
             .then(respJSON => {
                 let lesson = new Lesson(respJSON.lesson)
                 this.lessons.push(lesson)
@@ -29,10 +28,9 @@ export class LessonsPage {
     }
 
     delete (lesson) {
-        authFetch(`/api/lessons/${ko.unwrap(lesson.id)}/`, {
+        fetchJSON(`/api/lessons/${ko.unwrap(lesson.id)}/`, {
             method: 'DELETE'
         })
-            .then(handleAPIResponse)
             .then(() => {
                 this.active(this.newLessonForm)
                 this.lessons.remove(lesson)
