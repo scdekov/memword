@@ -3,6 +3,7 @@ import Arbiter from 'promissory-arbiter'
 import {BaseForm} from './base'
 import {Scout} from 'scout'
 import {Target} from 'data/target'
+import {authFetch} from 'utils'
 
 export class NewTargetForm extends BaseForm {
     constructor () {
@@ -51,7 +52,7 @@ export class NewTargetForm extends BaseForm {
     }
 
     _save () {
-        return fetch('/api/targets/', {
+        return authFetch('/api/targets/', {
             method: 'POST',
             body: JSON.stringify({
                 img_link: this.selectedLink(),

@@ -1,6 +1,7 @@
 import ko from 'knockout'
 import {Target} from 'data/target'
 import {Lesson} from 'data/lesson'
+import {authFetch} from 'utils'
 
 export class Context {
     constructor () {
@@ -16,7 +17,7 @@ export class Context {
     }
 
     _loadTargets () {
-        fetch('/api/targets/')
+        authFetch('/api/targets/')
             .then(data => data.json())
             .then(jsonData => {
                 this.targets(jsonData.map(targetData => {
@@ -26,7 +27,7 @@ export class Context {
     }
 
     _loadLessons () {
-        fetch('/api/lessons/')
+        authFetch('/api/lessons/')
             .then(data => data.json())
             .then(jsonData => {
                 this.lessons(jsonData.map(lessonData => {

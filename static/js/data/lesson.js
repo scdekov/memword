@@ -1,6 +1,6 @@
 import ko from 'knockout'
 import {Target} from './target'
-import {isEmpty, handleAPIResponse} from 'utils'
+import {isEmpty, handleAPIResponse, authFetch} from 'utils'
 
 class Question {
     constructor (data = {}) {
@@ -60,7 +60,7 @@ export class Lesson {
             url += `${this.id()}/`
         }
 
-        return fetch(url, {
+        return authFetch(url, {
             method: method,
             body: JSON.stringify(this._getData()),
             headers: {
@@ -82,7 +82,7 @@ export class Lesson {
     }
 
     pickTopTargets () {
-        return fetch('/api/lessons/@get-top-targets/')
+        return authFetch('/api/lessons/@get-top-targets/')
             .then(handleAPIResponse)
             .then(respJSON => {
                 this.targetIds(respJSON.targets.map(target => target.id))

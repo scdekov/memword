@@ -1,4 +1,5 @@
 import ko from 'knockout'
+import {authFetch} from 'utils'
 
 export class Target {
     constructor (data) {
@@ -10,7 +11,7 @@ export class Target {
     }
 
     save () {
-        return fetch(`/api/targets/${this.id}/`, {
+        return authFetch(`/api/targets/${this.id}/`, {
             method: 'PATCH',
             body: JSON.stringify({
                 identifier: ko.unwrap(this.identifier),
@@ -24,7 +25,7 @@ export class Target {
     }
 
     delete () {
-        return fetch(`/api/targets/${this.id}/`, {
+        return authFetch(`/api/targets/${this.id}/`, {
             method: 'DELETE'
         })
     }

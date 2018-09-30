@@ -1,3 +1,5 @@
+import {authFetch} from 'utils'
+
 export class Scout {
     static googleCache = {}
     static meaningsCache = {}
@@ -6,7 +8,7 @@ export class Scout {
         if (q in Scout.meaningsCache) {
             return Scout.meaningsCache[q]
         }
-        return (Scout.meaningsCache[q] = fetch(`api/meanings?q=${encodeURIComponent(q)}`)
+        return (Scout.meaningsCache[q] = authFetch(`api/meanings?q=${encodeURIComponent(q)}`)
             .then(resp => resp.json())
             .then(json => {
                 return json.meanings[0].description
@@ -28,7 +30,7 @@ export class Scout {
             return Scout.googleCache[q]
         }
 
-        return (Scout.googleCache[q] = fetch(`api/images?q=${encodeURIComponent(q)}`)
+        return (Scout.googleCache[q] = authFetch(`api/images?q=${encodeURIComponent(q)}`)
             .then(resp => resp.json()))
     }
 }

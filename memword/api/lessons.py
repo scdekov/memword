@@ -49,7 +49,7 @@ class LessonSerializer(serializers.ModelSerializer):
     def save(self):
         target_ids = self.validated_data.pop('target_ids', [])
 
-        student_id = self.context['request'].user.id or 1
+        student_id = self.context['request'].user.id
         lesson = super().save(student_id=student_id)
 
         for target_id in target_ids:
@@ -96,7 +96,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
         original_lesson = self.get_object()
 
         # this is suposed to be in atomic transactions
-        new_lesson = Lesson.objects.create(student_id=request.user.id or 1,
+        new_lesson = Lesson.objects.create(student_id=request.user.id,
                                            lesson_type=original_lesson.lesson_type,
                                            expected_duration=original_lesson.expected_duration,
                                            planned_start_time=datetime.now())
@@ -112,11 +112,6 @@ class LessonsViewSet(viewsets.ModelViewSet):
         serializer = TopTargetsQuerySerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
 
-        # temp
-        user = request.user
-        if user.is_anonymous:
-            user = User.objects.first()
-
-        top_targets = TargetPicker.pick_top(user, serializer.validated_data['targets_count'])
+        top_targets = TargetPicker.pick_top(request.user, serializer.validated_data['targets_count'])
 
         return Response({'targets': TargetSerializer(top_targets, many=True).data})

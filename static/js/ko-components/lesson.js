@@ -1,5 +1,5 @@
 import ko from 'knockout'
-import {handleAPIResponse} from 'utils'
+import {handleAPIResponse, authFetch} from 'utils'
 
 class LessonVM {
     constructor (data) {
@@ -10,7 +10,7 @@ class LessonVM {
     }
 
     answerQuestion (confidenceLevel) {
-        fetch(`/api/lessons/${ko.unwrap(this.lesson.id)}/@submit-answer/`, {
+        authFetch(`/api/lessons/${ko.unwrap(this.lesson.id)}/@submit-answer/`, {
             method: 'POST',
             body: JSON.stringify({
                 question_id: ko.unwrap(this.activeQuestion().id),
@@ -28,7 +28,7 @@ class LessonVM {
     }
 
     start () {
-        fetch(`/api/lessons/${ko.unwrap(this.lesson.id)}/@start/`, {
+        authFetch(`/api/lessons/${ko.unwrap(this.lesson.id)}/@start/`, {
             method: 'POST'
         })
             .then(handleAPIResponse)

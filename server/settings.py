@@ -131,5 +131,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+
 GOOGLE_SEARCH_URL = 'https://www.googleapis.com/customsearch/v1'
 OXFORD_DICT_SEARCH_URL = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/{word}'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
