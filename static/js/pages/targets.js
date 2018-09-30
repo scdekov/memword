@@ -9,7 +9,7 @@ export class TargetsPage {
         this.newTargetForm = new NewTargetForm()
 
         this.targets = context.targets
-        this.active = ko.observable(this.newTargetForm)
+        this.active = ko.observable()
 
         Arbiter.subscribe('new-target', this.onNewTarget.bind(this))
     }

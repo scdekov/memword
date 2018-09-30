@@ -1,15 +1,31 @@
 <script type="text/html" id="targets-page">
     <div class="targets-page">
-        <a href="#" data-bind="click: function () { active(newTargetForm) }">NEW</a>
-        <ul class="targets" data-bind="foreach: targets">
-            <li>
-                <a href="#" data-bind="text: identifier,
-                                        click: $parent.activateTarget.bind($parent, $data),
-                                        css: {'active': $parent.active() === $data}">
+        <div class="cards-container">
+            <div class="card new-target-card">
+                <a href="#" class="add-btn">
+                    <span class="glyphicon glyphicon-plus circled-glyph"></span>
                 </a>
-            </li>
-        </ul>
+            </div>
+            <!-- ko foreach: targets() -->
+            <div class="card">
+                <span class="card-title" data-bind="text: identifier"></span>
+                <span class="card-body" data-bind="text: description"></span>
+                <img class="card-footer" src="" data-bind="attr: {src: imgLink()}">
+                <div class="card-footer-hover">
+                    <div class="footer-left">
+                        <a href="#"><span class="glyphicon glyphicon-pencil circled-glyph" title="edit"></span></a>
+                    </div>
+                    <div class="footer-right">
+                        <a href="#" data-bind="click: $parent.removeTarget.bind($parent, $data)">
+                            <span class="glyphicon glyphicon-trash circled-glyph" title="delete"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
 
+        <!-- ko if: active() -->
         <div class="new-target" data-bind="template: {
                                                 name: 'new-target',
                                                 data: newTargetForm,
@@ -24,7 +40,8 @@
                                                 },
                                                 visible: active() !== newTargetForm"
                 style="display: none"></div>
-        </div>
+        <!-- /ko -->
+    </div>
 
     {% include 'forms/new-target.html' %}
     {% include 'forms/active-target.html' %}

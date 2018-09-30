@@ -13,7 +13,7 @@ class IndexVM {
         this.targetsPage = new TargetsPage(this.context)
         this.lessonsPage = new LessonsPage(this.context)
 
-        this.activePage = ko.observable(this.lessonsPage)
+        this.activePage = ko.observable(this.targetsPage)
     }
 }
 
