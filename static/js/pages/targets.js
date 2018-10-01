@@ -8,12 +8,26 @@ export class TargetsPage {
 
         this.targets = context.targets
         this.active = ko.observable()
+        this.newTarget = new EditTarget()
+        this.editingNewTarget = ko.observable()
 
         Arbiter.subscribe('new-target', this.onNewTarget.bind(this))
     }
 
     activateTarget (target) {
         this.active(new EditTarget(target))
+    }
+
+    editNewTarget () {
+        this.editingNewTarget(true)
+    }
+
+    stopEditNewTarget () {
+        this.newTarget.save()
+            .then(target => {
+                this.targets.unshift(target)
+                this.editingNewTarget(false)
+            })
     }
 
     saveActiveTarget () {

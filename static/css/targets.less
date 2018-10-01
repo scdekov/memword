@@ -1,11 +1,40 @@
 .new-target-card {
-    background-color: #0c0c0ccf;
+    .new-target-cover {
+        border-radius: @card-border-radius;
+        box-shadow: 3px 3px 20px rgba(0, 0, 0, .5);
+        background-color: #afafaf;
+        position: absolute;
+        z-index: 70;
+        max-width: @card-width;
+        min-width: @card-width;
+        height: @card-height;
+        padding-top: 170px;
+    }
 
     .add-btn {
-        position: absolute;
-        top: 184px;
-        left: 0;
-        right: 0;
+    }
+
+    .card-content {
+        display: none;
+    }
+
+    .card-content.active {
+        display: block;
+    }
+
+
+    &:hover {
+        .card-content {
+            display: block;
+        }
+
+        .new-target-cover {
+            display: none;
+        }
+    }
+
+    .card-activity-overlay {
+        z-index: -1;
     }
 }
 

@@ -5,5 +5,5 @@ from memword.models.target import Target
 
 
 class TargetsViewSet(viewsets.ModelViewSet):
-    queryset = Target.objects.all()
+    queryset = Target.objects.all().order_by('-id')
     serializer_class = TargetSerializer

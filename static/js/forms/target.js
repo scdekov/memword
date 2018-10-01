@@ -1,5 +1,4 @@
 import ko from 'knockout'
-import Arbiter from 'promissory-arbiter'
 import {BaseForm} from './base'
 import {Scout} from 'scout'
 import {Target} from 'data/target'
@@ -16,7 +15,7 @@ export class EditTarget extends BaseForm {
         this.selectedLink = target.imgLink || ko.observable()
         this.allowCreate = ko.computed(() => this.q() && (this.selectedLink() || this.description()))
         this.hasNextLink = ko.computed(() => this.links().indexOf(this.selectedLink()) < this.links().length - 1)
-        this.hasPrevLink = ko.computed(() => this.links().indexOf(this.selectedLink()))
+        this.hasPrevLink = ko.computed(() => this.links().indexOf(this.selectedLink()) > 0)
 
         this.search = ko.pureComputed(() => {
             if (!this.q()) { return }
@@ -74,10 +73,11 @@ export class EditTarget extends BaseForm {
     }
 
     save () {
-        if (this.target) {
-            return this._update()
+        if (!this.target || Object.keys(this.target).length === 0) {
+            return this._save()
         }
-        return this._save()
+
+        return this._update()
     }
 
     _update () {
@@ -100,8 +100,17 @@ export class EditTarget extends BaseForm {
                 description: this.description()
             })
         }).then(jsonData => {
-            Arbiter.publish('new-target', new Target(jsonData))
-            // this.clear()
+            this._clear()
+            return new Target(jsonData)
         })
+    }
+
+    _clear () {
+        this.target = null
+        this.q('')
+        this.queryCorrection('')
+        this.links([])
+        this.description('')
+        this.selectedLink('')
     }
 }
