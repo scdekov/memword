@@ -16,6 +16,11 @@ export class TargetsPage {
         this.active(new EditTarget(target))
     }
 
+    saveActiveTarget () {
+        this.active().save()
+            .then(() => this.active(null))
+    }
+
     onNewTarget (target) {
         this.targets.push(target)
         this.activateTarget(target)

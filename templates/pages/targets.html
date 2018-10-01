@@ -8,11 +8,11 @@
             </div>
             <!-- ko foreach: targets() -->
                 <!-- ko if: $parent.active() && $parent.active().target === $data -->
-                <div class="card edit-target" data-bind="with: $parent.active()">
-                    <input class="card-title" data-bind="value: q"/>
+                <div class="card card-activity edit-target" data-bind="with: $parent.active()">
+                    <input class="card-title" data-bind="textInput: q"/>
                     <textarea class="card-body" data-bind="value: description"></textarea>
                     <img class="card-footer" data-bind="img: selectedLink">
-                    <div class="card-footer">
+                    <div class="card-footer" data-bind="css: {'card-footer-hover-blur': loading}">
                         <div class="footer-left text-start">
                             <a href="#" data-bind="click: prevLink.bind($data), visible: hasPrevLink">
                                 <span class="glyphicon glyphicon-chevron-left" title="previous"></span>
@@ -24,7 +24,11 @@
                             </a>
                         </div>
                     </div>
+                    <div class="footer-body-loader" data-bind="visible: loading">
+                        <span class="loading-spinner"><span>
+                    </div>
                 </div>
+                <div class="card-activity-overlay"></div>
                 <!-- /ko -->
                 <!-- ko if: !$parent.active() || $parent.active().target !== $data -->
                 <div class="card">

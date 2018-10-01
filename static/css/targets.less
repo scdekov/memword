@@ -17,11 +17,37 @@
         }
     }
 
+    .card-title {
+        border-top-right-radius: @card-border-radius;
+        border-top-left-radius: @card-border-radius;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 1px solid #f3f3f3;
+    }
+
+    .card-body {
+        border: 0;
+    }
+
     .loading-spinner {
         position: absolute;
         top: 300px;
         left: 0;
         right: 0;
         margin: auto;
+    }
+
+    .footer-body-loader {
+        height: 391px;
+        position: absolute;
+        top: 61px;
+        width: 100%;
+        z-index: 150;
+        filter: blur(2px);
+
+        .loading-spinner {
+            top: 142px;
+        }
     }
 }

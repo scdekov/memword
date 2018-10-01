@@ -22,23 +22,25 @@ export class EditTarget extends BaseForm {
             if (!this.q()) { return }
             this.loading(true)
 
-            var loaders = [this.loadImages(this.q())]
-            if (!this.target) {
-                loaders.extend([
-                    this.loadCorrectQuery(this.q()),
-                    this.loadMeaning(this.q())
-                ])
-            }
-            Promise.all(loaders).finally(this.loading.bind(this, false))
+            Promise.all([
+                this.loadImages(this.q()),
+                this.loadCorrectQuery(this.q()),
+                this.loadMeaning(this.q())
+            ]).finally(this.loading.bind(this, false))
         }).extend({throttle: 1000})
     }
 
     loadImages (q) {
         return Scout.getImages(q)
             .then(images => {
+                let includeCurrent = this.links().length === 0 && this.selectedLink()
                 this.links(images)
-                if (this.selectedLink() && images.indexOf(this.selectedLink()) === -1) {
+                if (includeCurrent && images.indexOf(this.selectedLink()) === -1) {
                     this.links().push(this.selectedLink())
+                }
+
+                if (!includeCurrent) {
+                    this.selectedLink(this.links()[0])
                 }
             })
     }
@@ -71,6 +73,24 @@ export class EditTarget extends BaseForm {
         this.selectedLink(this.links()[ix + 1])
     }
 
+    save () {
+        if (this.target) {
+            return this._update()
+        }
+        return this._save()
+    }
+
+    _update () {
+        return fetchJSON(`/api/targets/${ko.unwrap(this.target.id)}/`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                img_link: this.selectedLink(),
+                identifier: this.q(),
+                description: this.description()
+            })
+        })
+    }
+
     _save () {
         return fetchJSON('/api/targets/', {
             method: 'POST',
@@ -81,7 +101,7 @@ export class EditTarget extends BaseForm {
             })
         }).then(jsonData => {
             Arbiter.publish('new-target', new Target(jsonData))
-            this.clear()
+            // this.clear()
         })
     }
 }
