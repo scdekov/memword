@@ -20,3 +20,41 @@ ko.bindingHandlers.img = {
         })
     }
 }
+
+function elementInViewport (el) {
+    var top = el.offsetTop
+    var left = el.offsetLeft
+    var width = el.offsetWidth
+    var height = el.offsetHeight
+
+    while (el.offsetParent) {
+        el = el.offsetParent
+        top += el.offsetTop
+        left += el.offsetLeft
+    }
+
+    return (
+        top < (window.pageYOffset + window.innerHeight) &&
+        left < (window.pageXOffset + window.innerWidth) &&
+        (top + height) > window.pageYOffset &&
+        (left + width) > window.pageXOffset
+    )
+}
+
+function addSrcIfVisible (element, src) {
+    if (elementInViewport(element)) {
+        element.src = src
+    }
+}
+
+ko.bindingHandlers.inactiveImg = {
+    init: (element, valueAccessor) => {
+        var src = ko.unwrap(valueAccessor())
+        if (!src) {
+            return
+        }
+
+        addSrcIfVisible(element, src)
+        setInterval(addSrcIfVisible.bind(this, element, src), 2000)
+    }
+}
