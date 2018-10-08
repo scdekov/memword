@@ -9,6 +9,7 @@ ko.bindingHandlers.editTarget = {
             if (e.target === overlay) {
                 bindingContext.$parent.saveActiveTarget()
                 e.target.removeEventListener(e.type, bindSaving)
+                cardActive = false
             }
         }
 
@@ -36,10 +37,11 @@ ko.bindingHandlers.activateNewTarget = {
             if (e.target === overlay) {
                 bindingContext.$data.stopEditNewTarget()
                 e.target.removeEventListener(e.type, bindSaving)
+                cardActive = false
             }
         }
 
-        var bindActivate = e => {
+        var bindActivate = () => {
             if (cardActive) {
                 return
             }
@@ -47,7 +49,6 @@ ko.bindingHandlers.activateNewTarget = {
 
             bindingContext.$data.editNewTarget()
             document.body.addEventListener('click', bindSaving)
-            e.target.removeEventListener(e.type, bindActivate)
         }
 
         element.addEventListener('click', bindActivate)
