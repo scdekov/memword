@@ -1,4 +1,4 @@
-<script type="text/html" id="lessons-page">
+<script type="text/html" id="lessons-page2">
     <div class="lessons-page">
         <div class="lessons-list">
             <a href="#" data-bind="click: activate.bind($data, newLessonForm)">NEW</a>
@@ -21,4 +21,54 @@
 
     {% include 'forms/new-lesson.html' %}
     {% include 'lesson.html' %}
+</script>
+
+<script type="text/html" id="lessons-page">
+    <div class="page">
+        <div class="cards-container">
+            <!-- <div data-bind="with: newTarget, activateNewTarget, css: {'card-activity': editingNewTarget}"
+                 class="card new-target-card edit-target">
+                <div class="new-target-cover">
+                    <a href="#" class="add-btn" data-bind="visible: !$parent.editingNewTarget()">
+                        <span class="glyphicon glyphicon-plus circled-glyph"></span>
+                    </a>
+                </div>
+                <input class="card-title" data-bind="textInput: q"/>
+                <textarea class="card-body" data-bind="value: description"></textarea>
+                <img class="card-footer" data-bind="img: selectedLink">
+                <div class="card-footer" data-bind="css: {'card-footer-hover-blur': loading}">
+                    <div class="footer-left text-start">
+                        <a href="#" data-bind="click: prevLink.bind($data), visible: hasPrevLink">
+                            <span class="glyphicon glyphicon-chevron-left" title="previous"></span>
+                        </a>
+                    </div>
+                    <div class="footer-right text-end">
+                        <a href="#" data-bind="click: nextLink.bind($data), visible: hasNextLink">
+                            <span class="glyphicon glyphicon-chevron-right" title="next"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-body-loader" data-bind="visible: loading">
+                    <span class="loading-spinner"><span>
+                </div>
+                <div data-bind="visible: $parent.editingNewTarget, css: {'active': $parent.editingNewTarget}"
+                     class="card-activity-overlay"></div>
+            </div> -->
+            <!-- ko foreach: lessons() -->
+                <div class="card card-no-title">
+                    <span class="card-body">
+                        <p data-bind="text: title"></p>
+                        <p data-bind="text: 'Planned start time: ' + plannedStartTime()"></p>
+                    </span>
+                    <div class="card-footer" data-bind="foreach: questions">
+                        <div class="lesson-img-preview">
+                            <img src="" data-bind="inactiveImg: target().imgLink" width="87" height="50">
+                        </div>
+                    </div>
+                </div>
+            <!-- /ko -->
+        </div>
+
+    {% include 'forms/new-target.html' %}
+    {% include 'forms/active-target.html' %}
 </script>

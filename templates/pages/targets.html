@@ -1,5 +1,5 @@
 <script type="text/html" id="targets-page">
-    <div class="targets-page">
+    <div class="page">
         <div class="cards-container">
             <div data-bind="with: newTarget, activateNewTarget, css: {'card-activity': editingNewTarget}"
                  class="card new-target-card edit-target">
@@ -74,23 +74,6 @@
                 <!-- /ko -->
             <!-- /ko -->
         </div>
-
-        <!-- ko if: false -->
-        <div class="new-target" data-bind="template: {
-                                                name: 'new-target',
-                                                data: newTargetForm,
-                                                if: active() === newTargetForm,
-                                            }, visible: active() === newTargetForm">
-        </div>
-
-        <div class="active-target" data-bind="template: {
-                                                    data: active,
-                                                    if: active() !== newTargetForm,
-                                                    name: 'active-target'
-                                                },
-                                                visible: active() !== newTargetForm"
-                style="display: none"></div>
-        <!-- /ko -->
     </div>
 
     {% include 'forms/new-target.html' %}

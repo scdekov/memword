@@ -1,6 +1,7 @@
 import ko from 'knockout'
 import {Target} from './target'
 import {isEmpty, fetchJSON} from 'utils'
+import moment from 'moment'
 
 class Question {
     constructor (data = {}) {
@@ -48,6 +49,7 @@ export class Lesson {
         this.startTime(data.start_time)
         this.endTime(data.end_time)
         this.expectedDuration(data.expected_duration)
+        this.plannedStartTime(moment(data.planned_start_time).format('MMMM Do YYYY, h:mm:ss a'))
         this.questions(data.questions.map(q => new Question(q)))
     }
 
