@@ -56,5 +56,9 @@ ko.bindingHandlers.inactiveImg = {
 
         addSrcIfVisible(element, src)
         setInterval(addSrcIfVisible.bind(this, element, src), 2000)
+        element.classList.add('loadable')
+        element.addEventListener('load', () => {
+            element.style.background = 'none'
+        })
     }
 }
