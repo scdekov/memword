@@ -23,6 +23,11 @@ export class TargetsPage {
     }
 
     stopEditNewTarget () {
+        if (!this.newTarget.hasChanges()) {
+            this.editingNewTarget(false)
+            return
+        }
+
         this.newTarget.save()
             .then(target => {
                 this.targets.unshift(target)

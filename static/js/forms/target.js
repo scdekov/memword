@@ -73,11 +73,24 @@ export class EditTarget extends BaseForm {
     }
 
     save () {
-        if (!this.target || Object.keys(this.target).length === 0) {
+        if (this._isNewTarget()) {
             return this._save()
         }
 
         return this._update()
+    }
+
+    _isNewTarget () {
+        return !this.target || Object.keys(this.target).length === 0
+    }
+
+    hasChanges () {
+        if (!this._isNewTarget()) {
+            // TODO
+            return true
+        }
+
+        return this.q()
     }
 
     _update () {
