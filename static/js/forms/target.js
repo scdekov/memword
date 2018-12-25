@@ -47,7 +47,11 @@ export class EditTarget extends BaseForm {
     loadMeaning (q) {
         return Scout.getMeaning(q)
             .then(meaning => {
-                this.description(meaning)
+                if (!this.description()) {
+                    this.description(meaning)
+                } else {
+                    // propose changing to default?
+                }
             })
     }
 
