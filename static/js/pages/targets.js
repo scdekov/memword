@@ -1,21 +1,43 @@
 import ko from 'knockout'
 import Arbiter from 'promissory-arbiter'
-import {NewTargetForm} from 'forms/target'
-import {Scout} from 'scout'
+import {EditTarget} from 'forms/target'
 
 export class TargetsPage {
     constructor (context) {
         this.templateName = 'targets-page'
-        this.newTargetForm = new NewTargetForm()
 
         this.targets = context.targets
-        this.active = ko.observable(this.newTargetForm)
+        this.active = ko.observable()
+        this.newTarget = new EditTarget()
+        this.editingNewTarget = ko.observable()
 
         Arbiter.subscribe('new-target', this.onNewTarget.bind(this))
     }
 
     activateTarget (target) {
-        this.active(target)
+        this.active(new EditTarget(target))
+    }
+
+    editNewTarget () {
+        this.editingNewTarget(true)
+    }
+
+    stopEditNewTarget () {
+        if (!this.newTarget.hasChanges()) {
+            this.editingNewTarget(false)
+            return
+        }
+
+        this.newTarget.save()
+            .then(target => {
+                this.targets.unshift(target)
+                this.editingNewTarget(false)
+            })
+    }
+
+    saveActiveTarget () {
+        this.active().save()
+            .then(() => this.active(null))
     }
 
     onNewTarget (target) {
@@ -26,18 +48,10 @@ export class TargetsPage {
     removeTarget (target) {
         target.delete().then(() => {
             this.targets.remove(target)
-            this.active(this.newTargetForm)
         })
     }
 
     saveTarget (target) {
         target.save()
-    }
-
-    setTargetDefaultDescription (target) {
-        Scout.getMeaning(target.identifier())
-            .then(meaning => {
-                target.description(meaning)
-            })
     }
 }

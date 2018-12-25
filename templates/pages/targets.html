@@ -1,15 +1,81 @@
 <script type="text/html" id="targets-page">
     <div class="targets-page">
-        <a href="#" data-bind="click: function () { active(newTargetForm) }">NEW</a>
-        <ul class="targets" data-bind="foreach: targets">
-            <li>
-                <a href="#" data-bind="text: identifier,
-                                        click: $parent.activateTarget.bind($parent, $data),
-                                        css: {'active': $parent.active() === $data}">
-                </a>
-            </li>
-        </ul>
+        <div class="cards-container">
+            <div data-bind="with: newTarget, activateNewTarget, css: {'card-activity': editingNewTarget}"
+                 class="card new-target-card edit-target">
+                <div class="new-target-cover">
+                    <a href="#" class="add-btn" data-bind="visible: !$parent.editingNewTarget()">
+                        <span class="glyphicon glyphicon-plus circled-glyph"></span>
+                    </a>
+                </div>
+                <input class="card-title" data-bind="textInput: q"/>
+                <textarea class="card-body" data-bind="value: description"></textarea>
+                <img class="card-footer" data-bind="img: selectedLink">
+                <div class="card-footer" data-bind="css: {'card-footer-hover-blur': loading}">
+                    <div class="footer-left text-start">
+                        <a href="#" data-bind="click: prevLink.bind($data), visible: hasPrevLink">
+                            <span class="glyphicon glyphicon-chevron-left" title="previous"></span>
+                        </a>
+                    </div>
+                    <div class="footer-right text-end">
+                        <a href="#" data-bind="click: nextLink.bind($data), visible: hasNextLink">
+                            <span class="glyphicon glyphicon-chevron-right" title="next"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-body-loader" data-bind="visible: loading">
+                    <span class="loading-spinner"><span>
+                </div>
+                <div data-bind="visible: $parent.editingNewTarget, css: {'active': $parent.editingNewTarget}"
+                     class="card-activity-overlay"></div>
+            </div>
+            <!-- ko foreach: targets() -->
+                <!-- ko if: $parent.active() && $parent.active().target === $data -->
+                <div class="card card-activity edit-target" data-bind="with: $parent.active()">
+                    <input class="card-title" data-bind="textInput: q"/>
+                    <textarea class="card-body" data-bind="value: description"></textarea>
+                    <img class="card-footer" data-bind="img: selectedLink">
+                    <div class="card-footer" data-bind="css: {'card-footer-hover-blur': loading}">
+                        <div class="footer-left text-start">
+                            <a href="#" data-bind="click: prevLink.bind($data), visible: hasPrevLink">
+                                <span class="glyphicon glyphicon-chevron-left" title="previous"></span>
+                            </a>
+                        </div>
+                        <div class="footer-right text-end">
+                            <a href="#" data-bind="click: nextLink.bind($data), visible: hasNextLink">
+                                <span class="glyphicon glyphicon-chevron-right" title="next"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer-body-loader" data-bind="visible: loading">
+                        <span class="loading-spinner"><span>
+                    </div>
+                </div>
+                <div class="card-activity-overlay active""></div>
+                <!-- /ko -->
+                <!-- ko if: !$parent.active() || $parent.active().target !== $data -->
+                <div class="card">
+                    <span class="card-title" data-bind="text: identifier"></span>
+                    <span class="card-body" data-bind="text: description"></span>
+                    <img class="card-footer card-footer-hover-blur" src="" data-bind="inactiveImg: imgLink">
+                    <div class="card-footer-hover">
+                        <div class="footer-left">
+                            <button class='btn-link' data-bind="editTarget">
+                                <span class="glyphicon glyphicon-pencil circled-glyph" title="edit"></span>
+                            </button>
+                        </div>
+                        <div class="footer-right">
+                            <button class='btn-link' data-bind="click: $parent.removeTarget.bind($parent, $data)">
+                                <span class="glyphicon glyphicon-trash circled-glyph" title="delete"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+            <!-- /ko -->
+        </div>
 
+        <!-- ko if: false -->
         <div class="new-target" data-bind="template: {
                                                 name: 'new-target',
                                                 data: newTargetForm,
@@ -24,7 +90,8 @@
                                                 },
                                                 visible: active() !== newTargetForm"
                 style="display: none"></div>
-        </div>
+        <!-- /ko -->
+    </div>
 
     {% include 'forms/new-target.html' %}
     {% include 'forms/active-target.html' %}

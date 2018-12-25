@@ -22,4 +22,8 @@ export class BaseForm {
             }
         }
     }
+
+    hasChanges () {
+        return true
+    }
 }
