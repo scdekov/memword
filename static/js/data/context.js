@@ -1,6 +1,6 @@
 import ko from 'knockout'
 import {Target} from 'data/target'
-import {Lesson} from 'data/lesson'
+import {LessonRepresentation} from 'data/lesson'
 import {fetchJSON} from 'utils'
 
 export class Context {
@@ -29,7 +29,7 @@ export class Context {
         fetchJSON('/api/lessons/')
             .then(jsonData => {
                 this.lessons(jsonData.map(lessonData => {
-                    return new Lesson(lessonData)
+                    return new LessonRepresentation(lessonData)
                 }))
             })
     }

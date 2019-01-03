@@ -3,13 +3,13 @@
 
 {% block content %}
 <div class="top-menu">
-    <a class="menu-link" href="#" data-bind="click: activePage.bind($data, targetsPage)">TARGETS</a>
-    <a class="menu-link" href="#" data-bind="click: activePage.bind($data, lessonsPage)">LESSONS</a>
+    <a class="menu-link" href="#" data-bind="click: activePage.bind($data, targetsPage),
+                                             css: {selected: activePage() === targetsPage}">TARGETS</a>
+    <a class="menu-link" href="#" data-bind="click: activePage.bind($data, lessonsPage),
+                                             css: {selected: activePage() === lessonsPage}">LESSONS</a>
 </div>
 
-<div class="main-content">
-    <div data-bind="template: {name: activePage().templateName, data: activePage()}"></div>
-</div>
+<div class="main-content" data-bind="template: {name: activePage().templateName, data: activePage()}"></div>
 
 {% include 'pages/targets.html' %}
 {% include 'pages/lessons.html' %}

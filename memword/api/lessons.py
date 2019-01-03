@@ -63,7 +63,7 @@ class TopTargetsQuerySerializer(serializers.Serializer):
 
 
 class LessonsViewSet(viewsets.ModelViewSet):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by('-id')
     serializer_class = LessonSerializer
 
     @decorators.detail_route(methods=['POST'], url_path='@submit-answer')
@@ -77,9 +77,10 @@ class LessonsViewSet(viewsets.ModelViewSet):
         question.pass_time = datetime.now()
         question.save()
 
-        LearningIntervalsManager.handle_submitted_question(question)
+        if question.lesson.should_finish():
+            question.lesson.finalize()
 
-        # TODO: check if this is the last question and finzlie lesson if so
+        LearningIntervalsManager.handle_submitted_question(question)
 
         return Response({'question': QuestionSerializer(question).data})
 

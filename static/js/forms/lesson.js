@@ -1,6 +1,7 @@
 import ko from 'knockout'
+import moment from 'moment'
 import {BaseForm} from 'forms/base'
-import {Lesson} from 'data/lesson'
+import {LessonRepresentation} from 'data/lesson'
 
 export class NewLessonForm extends BaseForm {
     constructor (context) {
@@ -8,17 +9,22 @@ export class NewLessonForm extends BaseForm {
 
         this.templateName = 'new-lesson-form'
 
-        this.lesson = ko.observable(new Lesson())
+        this.lesson = ko.observable(new LessonRepresentation())
 
         this.targets = context.targets
         this.lessons = context.lessons
+        this.todayDate = moment().format('YYYY-MM-DD')
     }
 
     _save () {
         return this.lesson().save()
             .then(() => {
-                this.lessons.push(this.lesson())
-                this.lesson(new Lesson())
+                this.lessons.unshift(this.lesson())
+                this.lesson(new LessonRepresentation())
             })
+    }
+
+    clear () {
+        this.lesson(new LessonRepresentation())
     }
 }
