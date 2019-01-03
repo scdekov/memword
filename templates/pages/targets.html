@@ -8,8 +8,13 @@
                         <span class="glyphicon glyphicon-plus circled-glyph"></span>
                     </a>
                 </div>
-                <input class="card-title" data-bind="textInput: q"/>
+                <input class="card-title" placeholder="Title" data-bind="textInput: q"/>
+                <div data-bind="visible: queryCorrection, popup: queryCorrection">
+                    <span class="arrow"></span>
+                    <p>Did you mean <a href="#" data-bind="click: correctQuery, text: queryCorrection"></a></p>
+                </div>
                 <textarea class="card-body" data-bind="value: description"></textarea>
+                <div class="card-footer back"></div>
                 <img class="card-footer" data-bind="img: selectedLink">
                 <div class="card-footer" data-bind="css: {'card-footer-hover-blur': loading}">
                     <div class="footer-left text-start">
@@ -75,7 +80,4 @@
             <!-- /ko -->
         </div>
     </div>
-
-    {% include 'forms/new-target.html' %}
-    {% include 'forms/active-target.html' %}
 </script>

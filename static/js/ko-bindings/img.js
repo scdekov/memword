@@ -1,6 +1,10 @@
 import ko from 'knockout'
 
 ko.bindingHandlers.img = {
+    init: element => {
+        ko.utils.domData.set(element, 'original-display', element.style.display)
+        element.style.display = 'none'
+    },
     update: (element, valueAccessor) => {
         var link = ko.unwrap(valueAccessor())
         if (!link) {
@@ -18,6 +22,7 @@ ko.bindingHandlers.img = {
         element.addEventListener('load', () => {
             loadingSpinner.remove()
         })
+        element.style.display = ko.utils.domData.get(element, 'original-display')
     }
 }
 

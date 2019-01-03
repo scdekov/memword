@@ -2,6 +2,7 @@ import '../css/style'
 import 'ko-components/lesson'
 import 'ko-bindings/edit-target'
 import 'ko-bindings/img'
+import 'ko-bindings/popup'
 
 import ko from 'knockout'
 import {TargetsPage} from 'pages/targets'
@@ -15,9 +16,9 @@ class IndexVM {
         this.targetsPage = new TargetsPage(this.context)
         this.lessonsPage = new LessonsPage(this.context)
 
-        this.activePage = ko.observable(this.lessonsPage)
+        this.activePage = ko.observable(this.targetsPage)
     }
 }
 
 ko.applyBindings(new IndexVM())
-window.ko = ko
+window.ko = ko // this allow debugging in the browser

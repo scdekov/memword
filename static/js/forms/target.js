@@ -64,6 +64,7 @@ export class EditTarget extends BaseForm {
 
     correctQuery () {
         this.q(this.queryCorrection())
+        this.description('') // force recalculating when loading the new query
     }
 
     prevLink () {

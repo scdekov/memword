@@ -10,29 +10,20 @@
         height: @card-height;
         padding-top: 170px;
     }
-
-    .add-btn {
-    }
-
     .card-content {
         display: none;
     }
-
     .card-content.active {
         display: block;
     }
-
-
     &:hover {
         .card-content {
             display: block;
         }
-
         .new-target-cover {
             display: none;
         }
     }
-
     .card-activity-overlay {
         z-index: -1;
     }
@@ -45,7 +36,6 @@
             color: white;
         }
     }
-
     .card-title {
         border-top-right-radius: @card-border-radius;
         border-top-left-radius: @card-border-radius;
@@ -54,11 +44,9 @@
         border-top: 0;
         border-bottom: 1px solid #f3f3f3;
     }
-
     .card-body {
         border: 0;
     }
-
     .loading-spinner {
         position: absolute;
         top: 300px;
@@ -66,7 +54,6 @@
         right: 0;
         margin: auto;
     }
-
     .footer-body-loader {
         height: 391px;
         position: absolute;
@@ -74,9 +61,22 @@
         width: 100%;
         z-index: 150;
         filter: blur(2px);
-
         .loading-spinner {
             top: 142px;
         }
+    }
+}
+
+.new-target,
+.active-target {
+    flex: 2;
+}
+
+.new-target {
+    img {
+        padding: 10px;
+    }
+    .selected-img {
+        border: 1px solid black;
     }
 }
