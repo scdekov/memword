@@ -39,10 +39,6 @@
     vertical-align: top;
 }
 
-.main-content {
-    display: flex;
-}
-
 .new-target,
 .active-target{
     flex: 2;
@@ -91,6 +87,11 @@
 
   .menu-link {
     padding: 20px;
+    text-decoration: none;
+
+    &.selected {
+      background-color: #ededed;
+    }
   }
 }
 
@@ -106,13 +107,9 @@
   }
 }
 
-.page {
-  display: flex;
-  padding: 0 170px;
-}
-
 
 @import 'loading-spinner.less';
 @import 'cards.less';
 @import 'targets.less';
 @import 'layout.less';
+@import 'lessons.less';

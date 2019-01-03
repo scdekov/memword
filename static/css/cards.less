@@ -32,6 +32,7 @@
             font-size: 30px;
             color: @font-color;
             text-transform: uppercase;
+            outline: none;
         }
 
         input.card-title {
@@ -56,6 +57,7 @@
             font-size: 25px;
             z-index: 20;
             color: @font-color;
+            outline: none;
 
             &.card-body-hoverable {
                 visibility: hidden;
@@ -161,5 +163,56 @@
         left: 0;
         background: #000;
         opacity: 0.5;
+    }
+
+}
+
+.card-wide {
+    border-radius: 10px;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+    min-height: 250px;
+    margin-bottom: 30px;
+    padding: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 450px;
+
+    .section {
+        padding: 10px;
+        min-width: 200px;
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        &.fixed-width {
+            width: 220px;
+        }
+
+        &.btns-section {
+            width: 100%;
+            button {
+                width: 49%;
+            }
+        }
+    }
+
+    .section-container {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .section-container-width-1 {
+        flex: 1;
+    }
+
+    .section-container-width-2 {
+        flex: 2;
+    }
+
+    .section-container-width-full {
+        flex-basis: 100%;
     }
 }

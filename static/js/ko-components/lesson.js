@@ -6,7 +6,7 @@ class LessonVM {
         this.lesson = data.lesson
         this.activeQuestion = ko.observable(this._getFirstUnAnsweredQuestion())
         this.started = ko.computed(() => this.lesson.startTime())
-        this.finished = ko.observable(!this.activeQuestion()) // this should be !!endTime
+        this.finished = ko.observable(!!this.lesson.endTime())
     }
 
     answerQuestion (confidenceLevel) {
@@ -19,6 +19,7 @@ class LessonVM {
         })
             .then(respJSON => {
                 console.log(respJSON) // TODO: load into the question
+                this.activeQuestion()._load(respJSON.question)
                 this._moveToNextQuestion()
             })
     }

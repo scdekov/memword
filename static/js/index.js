@@ -20,3 +20,4 @@ class IndexVM {
 }
 
 ko.applyBindings(new IndexVM())
+window.ko = ko

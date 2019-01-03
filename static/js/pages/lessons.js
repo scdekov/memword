@@ -1,19 +1,37 @@
 import ko from 'knockout'
 import {NewLessonForm} from 'forms/lesson'
 import {fetchJSON} from 'utils'
-import {Lesson} from 'data/lesson'
+import {LessonRepresentation} from 'data/lesson'
 
 export class LessonsPage {
     constructor (context) {
         this.templateName = 'lessons-page'
 
         this.newLessonForm = new NewLessonForm(context)
+        this.addingNewLesson = ko.observable()
+
         this.lessons = context.lessons
-        this.active = ko.observable(this.newLessonForm)
+        this.active = ko.observable()
     }
 
     activate (lesson) {
         this.active(lesson)
+    }
+
+    addNew () {
+        this.newLessonForm.clear()
+        this.addingNewLesson(true)
+    }
+
+    saveNew () {
+        this.newLessonForm.save()
+            .then(() => {
+                this.addingNewLesson(false)
+            })
+    }
+
+    showList () {
+        this.active(null)
     }
 
     duplicate (lesson) {
@@ -21,9 +39,8 @@ export class LessonsPage {
             method: 'POST'
         })
             .then(respJSON => {
-                let lesson = new Lesson(respJSON.lesson)
-                this.lessons.push(lesson)
-                this.active(lesson)
+                let lesson = new LessonRepresentation(respJSON.lesson)
+                this.lessons.unshift(lesson)
             })
     }
 
@@ -32,7 +49,9 @@ export class LessonsPage {
             method: 'DELETE'
         })
             .then(() => {
-                this.active(this.newLessonForm)
+                if (this.active() === lesson) {
+                    this.active(null)
+                }
                 this.lessons.remove(lesson)
             })
     }

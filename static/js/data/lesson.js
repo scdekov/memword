@@ -3,6 +3,9 @@ import {Target} from './target'
 import {isEmpty, fetchJSON} from 'utils'
 import moment from 'moment'
 
+const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD'
+const DEFAULT_DATETIME_FORMAT = 'YYYY-MM-DDThh:mm'
+
 class Question {
     constructor (data = {}) {
         this.id = ko.observable()
@@ -31,9 +34,10 @@ export class Lesson {
         this.title = ko.observable()
         this.lessonType = ko.observable()
         this.startTime = ko.observable()
-        this.plannedStartTime = ko.observable()
+        this.plannedStartTime = ko.observable(moment().format(DEFAULT_DATE_FORMAT))
         this.endTime = ko.observable()
         this.expectedDuration = ko.observable()
+        this.timeToStart = ko.observable()
         this.questions = ko.observableArray()
         this.targetIds = ko.observableArray()
 
@@ -49,7 +53,8 @@ export class Lesson {
         this.startTime(data.start_time)
         this.endTime(data.end_time)
         this.expectedDuration(data.expected_duration)
-        this.plannedStartTime(moment(data.planned_start_time).format('MMMM Do YYYY, h:mm:ss a'))
+        this.plannedStartTime(moment(data.planned_start_time).format(DEFAULT_DATE_FORMAT))
+        this.timeToStart(moment(data.planned_start_time).endOf('day').fromNow())
         this.questions(data.questions.map(q => new Question(q)))
     }
 
@@ -71,8 +76,9 @@ export class Lesson {
 
     _getData () {
         return {
+            title: this.title(),
             lesson_type: this.lessonType(),
-            planned_start_time: this.plannedStartTime(),
+            planned_start_time: moment(this.plannedStartTime()).format(DEFAULT_DATETIME_FORMAT),
             end_time: this.endTime(),
             expected_duration: this.expectedDuration(),
             target_ids: this.targetIds()
@@ -84,5 +90,40 @@ export class Lesson {
             .then(respJSON => {
                 this.targetIds(respJSON.targets.map(target => target.id))
             })
+    }
+}
+
+export class LessonRepresentation extends Lesson {
+    constructor (...args) {
+        super(...args)
+        // this better be calculated in the backend
+        this.statusCode = ko.computed(() => {
+            if (!this.id()) {
+                return ''
+            } else if (!this.startTime()) {
+                return 'todo'
+            } else if (!this.endTime()) {
+                return 'in-progress'
+            }
+            return 'completed'
+        })
+
+        this.status = ko.computed(() => {
+            return {
+                '': 'Computing...',
+                'todo': 'To Do',
+                'in-progress': 'In Progress',
+                'completed': 'Completed'
+            }[this.statusCode()]
+        })
+
+        this.progress = ko.computed(() => {
+            if (this.statusCode() !== 'in-progress') {
+                return ''
+            }
+
+            let passedQuestions = this.questions().filter(question => question.passed())
+            return `${passedQuestions.length} / ${this.questions().length}`
+        })
     }
 }
