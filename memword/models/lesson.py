@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.conf import settings
 
@@ -44,3 +46,10 @@ class Lesson(models.Model):
 
     def _build_default_title(self):
         return 'Lesson planned for %s' % self.planned_start_time
+
+    def should_finish(self):
+        return not self.questions.filter(passed=False).count()
+
+    def finalize(self):
+        self.end_time = datetime.now()
+        self.save()
