@@ -17,3 +17,15 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
+
+app.conf.beat_schedule = {
+    'adjust learning intervals': {
+        'task': 'memword.tasks.adjust_default_learning_intervals',
+        'schedule': 60 * 60 * 24,  # once a day
+    },
+    'adjust target difficulties': {
+        'task': 'memword.tasks.adjust_default_target_difficulties',
+        'schedule': 60 * 60 * 24,  # once a day
+    }
+}
+app.conf.timezone = 'UTC'

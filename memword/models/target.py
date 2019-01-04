@@ -24,3 +24,12 @@ class TargetDifficulty(models.Model):
     target = models.ForeignKey('memword.Target', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     difficulty = models.FloatField(default=1)
+
+    @classmethod
+    def adjust_default_difficulties(cls):
+        for default_difficulty in cls.objects.filter(user=None):
+            avg_target_difficulty = list(cls.objects.filter(target=default_difficulty.target)\
+                                                    .aggregate(models.Avg('difficulty'))\
+                                                    .values())[0]
+            default_difficulty.difficulty = avg_target_difficulty
+            default_difficulty.save()

@@ -18,7 +18,6 @@ class LessonVM {
             })
         })
             .then(respJSON => {
-                console.log(respJSON) // TODO: load into the question
                 this.activeQuestion()._load(respJSON.question)
                 this._moveToNextQuestion()
             })
