@@ -7,3 +7,4 @@ venv
 static/bundles/*
 *~
 .vscode
+celerybeat-schedule
