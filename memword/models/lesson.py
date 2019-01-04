@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 
 from memword.models.fields import ConfidenceLevelField
+from memword.models.target import TargetDifficulty
 
 
 class Question(models.Model):

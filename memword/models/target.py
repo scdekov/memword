@@ -12,3 +12,15 @@ class Target(models.Model):
 
     def need_notification(self):
         return self.repetitions.order_by('-id').first().date_seen
+
+    def difficulty(self, user=None):
+        return TargetDifficulty.objects.get_or_create(target=self, user=user)
+
+
+class TargetDifficulty(models.Model):
+    BASE_DIFFICULTY = 1
+    DIFFICULTY_STEP = 0.1
+
+    target = models.ForeignKey('memword.Target', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    difficulty = models.FloatField(default=1)

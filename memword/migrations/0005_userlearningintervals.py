@@ -9,6 +9,7 @@ import django.db.models.deletion
 def days_in_seconds(days):
     return int(timedelta(days=days).total_seconds())
 
+
 DEFAULT_INTERVALS = {
     '0_1': days_in_seconds(1),
     '1_2': days_in_seconds(1),
@@ -78,7 +79,8 @@ class Migration(migrations.Migration):
                 ('17_18', models.IntegerField(help_text='in seconds', null=True)),
                 ('18_19', models.IntegerField(help_text='in seconds', null=True)),
                 ('19_20', models.IntegerField(help_text='in seconds', null=True)),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                           to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.RunPython(code=populate_default_row, reverse_code=lambda *args, **kwargs: True)
