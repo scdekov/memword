@@ -10,7 +10,7 @@ class ConfidenceLevelField(models.IntegerField):
 
     def to_python(self, value):
         result = super().to_python(value)
-        if result not in range(1, 11):
+        if result is not None and result not in range(1, 11):
             raise exceptions.ValidationError('Confidence Level should be from 1 to 10')
 
         return result
