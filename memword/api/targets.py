@@ -14,3 +14,7 @@ class TargetsViewSet(viewsets.ModelViewSet):
         if serializer.instance.author_id is None:
             serializer.instance.author_id = self.request.user.id
             serializer.instance.save()
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        return queryset.filter(author=self.request.user)

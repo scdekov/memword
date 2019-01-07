@@ -46,3 +46,6 @@ urllib3==1.23
 vine==1.1.4
 wcwidth==0.1.7
 wrapt==1.10.11
+pytest==4.0.2
+pytest-django==3.4.4
+model-mommy==1.6.0
