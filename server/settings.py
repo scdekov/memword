@@ -11,10 +11,19 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from server import credentials
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+try:
+    from server import credentials
+except ImportError:
+    credentials = object()
+    credentials.GOOGLE_CX = os.environ.get('GOOGLE_CX')
+    credentials.GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+
+    credentials.OXFORD_DICT_APP_ID = os.environ.get('OXFORD_DICT_APP_ID')
+    credentials.OXFORD_DICT_APP_KEY = os.environ.get('OXFORD_DICT_APP_KEY')
 
 CREDETIALS = credentials
 
