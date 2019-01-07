@@ -18,7 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
     from server import credentials
 except ImportError:
-    credentials = object()
+    class credentials:
+        pass
     credentials.GOOGLE_CX = os.environ.get('GOOGLE_CX')
     credentials.GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
