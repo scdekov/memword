@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 from memword.models.fields import ConfidenceLevelField
 from memword.models.target import TargetDifficulty
@@ -52,5 +51,5 @@ class Lesson(models.Model):
         return not self.questions.filter(passed=False).count()
 
     def finalize(self):
-        self.end_time = datetime.now()
+        self.end_time = timezone.now()
         self.save()

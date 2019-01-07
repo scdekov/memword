@@ -38,7 +38,7 @@ class TestTargetsViewSet:
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data['identifier'] == target.identifier
 
-    def test_get_unathorzied(self, client, user2, target):
+    def test_get_detail__unathorzied(self, client, user2, target):
         client.force_authenticate(user2)
         resp = client.get(reverse('target-detail', kwargs={'pk': target.id}))
 

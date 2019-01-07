@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from rest_framework import serializers, viewsets, decorators, status
 from rest_framework.response import Response
@@ -43,10 +42,11 @@ class LessonSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
     lesson_type = serializers.CharField(allow_blank=True, default=Lesson.TYPE_LECTURE)
     target_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
-    planned_start_time = serializers.DateTimeField(default=datetime.now)
+    planned_start_time = serializers.DateTimeField(default=timezone.now)
     expected_duration = serializers.DurationField(default='60')
 
     def save(self):
+        # target_ids may need to be validated if they belongs to the current user
         target_ids = self.validated_data.pop('target_ids', [])
 
         student_id = self.context['request'].user.id
@@ -66,7 +66,11 @@ class LessonsViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all().order_by('-id')
     serializer_class = LessonSerializer
 
-    @decorators.detail_route(methods=['POST'], url_path='@submit-answer')
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        return queryset.filter(student=self.request.user)
+
+    @decorators.action(detail=True, methods=['POST'], url_path='@submit-answer')
     def submit_answer(self, request, pk):
         serializer = SubmitQuestionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -74,7 +78,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
         question = get_object_or_404(Question, lesson_id=pk, id=serializer.validated_data['question_id'])
         question.confidence_level = serializer.validated_data['confidence_level']
         question.passed = True
-        question.pass_time = datetime.now()
+        question.pass_time = timezone.now()
         question.save()
 
         if question.lesson.should_finish():
@@ -84,15 +88,15 @@ class LessonsViewSet(viewsets.ModelViewSet):
 
         return Response({'question': QuestionSerializer(question).data})
 
-    @decorators.detail_route(methods=['POST'], url_path='@start')
+    @decorators.action(detail=True, methods=['POST'], url_path='@start')
     def start(self, request, **kwargs):
         lesson = self.get_object()
-        lesson.start_time = datetime.now()
+        lesson.start_time = timezone.now()
         lesson.save()
 
         return Response({'lesson': LessonSerializer(lesson).data})
 
-    @decorators.detail_route(methods=['POST'], url_path='@duplicate')
+    @decorators.action(detail=True, methods=['POST'], url_path='@duplicate')
     def duplicate(self, request, **kwargs):
         original_lesson = self.get_object()
 
@@ -100,7 +104,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
         new_lesson = Lesson.objects.create(student_id=request.user.id,
                                            lesson_type=original_lesson.lesson_type,
                                            expected_duration=original_lesson.expected_duration,
-                                           planned_start_time=datetime.now())
+                                           planned_start_time=timezone.now())
         # start time should be calculated somehow
 
         for question in original_lesson.questions.all():
@@ -108,7 +112,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
 
         return Response({'lesson': LessonSerializer(new_lesson).data}, status=status.HTTP_201_CREATED)
 
-    @decorators.list_route(url_path='@get-top-targets')
+    @decorators.action(detail=False, url_path='@get-top-targets')
     def get_top_targets(self, request):
         serializer = TopTargetsQuerySerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)

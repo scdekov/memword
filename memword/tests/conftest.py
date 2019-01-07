@@ -28,3 +28,10 @@ def target(user):
                       identifier='scroll',
                       description='a piece of paper',
                       author=user)
+
+
+@pytest.fixture()
+def lesson(target):
+    lesson = mommy.make('memword.Lesson', student=target.author)
+    mommy.make('memword.Question', target=target, lesson=lesson)
+    return lesson
