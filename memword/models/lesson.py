@@ -3,7 +3,6 @@ from django.conf import settings
 from django.utils import timezone
 
 from memword.models.fields import ConfidenceLevelField
-from memword.models.target import TargetDifficulty
 
 
 class Question(models.Model):
