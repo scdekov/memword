@@ -4,7 +4,7 @@ const WebpackNotifierPlugin = require('webpack-notifier')
 module.exports = {
     entry: './static/js/index.js',
     output: {
-        filename: 'main.js',
+        filename: 'main-[hash].js',
         path: path.resolve(__dirname, 'static', 'bundles')
     },
     mode: 'development',
