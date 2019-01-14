@@ -56,6 +56,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'webpack_loader',
+
     'memword',
     'scout'
 ]
@@ -150,6 +152,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',  # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 
 
 GOOGLE_SEARCH_URL = 'https://www.googleapis.com/customsearch/v1'

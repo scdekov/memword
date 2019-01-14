@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load render_bundle from webpack_loader %}
 {% load staticfiles %}
 
 {% block content %}
@@ -14,5 +15,5 @@
 {% include 'pages/targets.html' %}
 {% include 'pages/lessons.html' %}
 
-<script src="{% static 'bundles/main.js' %}"></script>
+{% render_bundle 'main' %}
 {% endblock content %}

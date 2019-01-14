@@ -8,3 +8,4 @@ static/bundles/*
 *~
 .vscode
 celerybeat-schedule
+webpack-stats.json
