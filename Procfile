@@ -1,3 +1,2 @@
 release: python manage.py migrate
-web: gunicorn memword.wsgi --log-file -
-buildstatic: npm install && npm run build
+web: npm install && npm run build && gunicorn memword.wsgi --log-file -
