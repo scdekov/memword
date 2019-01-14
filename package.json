@@ -35,7 +35,7 @@
   },
   "scripts": {
     "watch": "webpack --config webpack.config.js --watch",
-    "build": "webpack --config webpack.config.js"
+    "heroku-postbuild": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC"
