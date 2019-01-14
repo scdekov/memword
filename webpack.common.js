@@ -1,13 +1,8 @@
 const path = require('path')
-const WebpackNotifierPlugin = require('webpack-notifier')
+const BundleTracker = require('webpack-bundle-tracker')
 
 module.exports = {
     entry: './static/js/index.js',
-    output: {
-        filename: 'main-[hash].js',
-        path: path.resolve(__dirname, 'static', 'bundles')
-    },
-    mode: 'development',
 
     module: {
         rules: [{
@@ -43,8 +38,6 @@ module.exports = {
     },
 
     plugins: [
-        new WebpackNotifierPlugin()
-    ],
-
-    devtool: 'inline-source-map'
+        new BundleTracker({filename: './webpack-stats.json'})
+    ]
 }

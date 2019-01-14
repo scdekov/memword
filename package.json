@@ -20,7 +20,9 @@
     "promissory-arbiter": "^1.0.1",
     "style-loader": "^0.22.1",
     "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0"
+    "webpack-bundle-tracker": "^0.4.2-beta",
+    "webpack-cli": "^3.1.0",
+    "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
     "eslint": "^5.4.0",
@@ -34,7 +36,9 @@
     "webpack-notifier": "^1.6.0"
   },
   "scripts": {
-    "watch": "webpack --config webpack.config.js --watch"
+    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "webpack --config webpack.prod.js",
+    "heroku-postbuild": "npm run build"
   },
   "author": "",
   "license": "ISC"

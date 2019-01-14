@@ -44,7 +44,7 @@ class Lesson(models.Model):
             self.title = self._build_default_title()
 
     def _build_default_title(self):
-        return 'Lesson planned for %s' % self.planned_start_time
+        return '%s planned for %s' % (self.lesson_type.title(), self.planned_start_time)
 
     def should_finish(self):
         return not self.questions.filter(passed=False).count()

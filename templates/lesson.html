@@ -1,10 +1,15 @@
 <script type="text/html" id="active-lesson">
-    <lesson params="lesson: $data"></lesson>
+    <!-- ko if: $data.lessonType() === 'lecture' -->
+    <lecture params="lesson: $data"></lecture>
+    <!-- /ko -->
+    <!-- ko if: $data.lessonType() === 'exam' -->
+    <exam params="lesson: $data"></exam>
+    <!-- /ko -->
 </script>
 
-<script type="text/html" id="lesson">
+<script type="text/html" id="lecture">
 <div class="add-lesson">
-    <button data-bind="click: $parents[1].active.bind($parents[1], null),
+    <button class="btn btn-secondary" data-bind="click: $parents[1].active.bind($parents[1], null),
                        visible: !finished()">Back</button>
 </div>
 <div class="card-wide">
@@ -12,13 +17,13 @@
         <div data-bind="visible: !started()">
             <p data-bind="text: lesson.questions().length + ' questions'"></p>
             <p data-bind="text: 'Expected duration ' + lesson.expectedDuration()"></p>
-            <button data-bind="click: start">START</button>
+            <button class="btn btn-primary" data-bind="click: start">START</button>
         </div>
 
         <div data-bind="visible: finished">
             <p>This lesson had finished. If you want to take it again click duplicate button.</p>
-            <button data-bind="click: $parents[1].duplicate.bind($parents[1], lesson)">DUPLICATE</button>
-            <button data-bind="click: $parents[1].showList.bind($parents[1])">BACK</button>
+            <button class="btn btn-primary" data-bind="click: $parents[1].duplicate.bind($parents[1], lesson)">DUPLICATE</button>
+            <button class="btn btn-secondary" data-bind="click: $parents[1].showList.bind($parents[1])">BACK</button>
         </div>
 
         <div data-bind="template: {
@@ -30,11 +35,58 @@
             <img height="300" data-bind="attr: {src: imgLink}, visible: imgLink"></img>
 
             <div>
-                <p>How easy was that?</p>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 1)">GG</button>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 3)">Need more</button>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 6)">easy</button>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 9)">EZ</button>
+                <h3>How easy was that?</h3>
+                <button class="btn btn-primary" data-bind="click: $parent.questionReviewd.bind($parent, 9)">EZ</button>
+                <button class="btn btn-primary" data-bind="click: $parent.questionReviewd.bind($parent, 6)">easy</button>
+                <button class="btn btn-primary" data-bind="click: $parent.questionReviewd.bind($parent, 3)">Need more</button>
+                <button class="btn btn-primary" data-bind="click: $parent.questionReviewd.bind($parent, 1)">GG</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/html" id="exam">
+<div class="add-lesson">
+    <button class="btn btn-secondary" data-bind="click: $parents[1].active.bind($parents[1], null),
+                       visible: !finished()">Back</button>
+</div>
+<div class="card-wide">
+    <div class="section-contatiner">
+        <div data-bind="visible: !started()">
+            <p data-bind="text: lesson.questions().length + ' questions'"></p>
+            <p data-bind="text: 'Expected duration ' + lesson.expectedDuration()"></p>
+            <button class="btn btn-primary" data-bind="click: start">START</button>
+        </div>
+
+        <div data-bind="visible: finished">
+            <p>This lesson had finished. If you want to take it again click duplicate button.</p>
+            <button class="btn btn-primary" data-bind="click: $parents[1].duplicate.bind($parents[1], lesson)">DUPLICATE</button>
+            <button class="btn btn-secondary" data-bind="click: $parents[1].showList.bind($parents[1])">BACK</button>
+        </div>
+
+        <div data-bind="template: {
+            data: activeQuestion() && activeQuestion().target,
+            if: started() && !finished()
+        }">
+            <h4 data-bind="text: 'What does ' + identifier() + ' mean?'"></h4>
+            <div data-bind="foreach: $parents[2].getDescriptionAnswers($data)">
+                <div>
+                    <label>
+                        <input type="radio" name="descAnswer" data-bind="checked: $parents[1].selectedAnswer,
+                                                                         attr: {value: $data}"/>
+                        <span data-bind="text: $data"></span>
+                    </label>
+                </div>
+            </div>
+
+
+            <div>
+                <h3>How sure?</h3>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 9)">Confident</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 6)">Almost sure</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 3)">Probably</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 1)">Lottery</button>
             </div>
         </div>
     </div>

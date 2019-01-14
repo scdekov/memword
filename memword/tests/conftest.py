@@ -35,3 +35,17 @@ def lesson(target):
     lesson = mommy.make('memword.Lesson', student=target.author)
     mommy.make('memword.Question', target=target, lesson=lesson)
     return lesson
+
+
+@pytest.fixture()
+def lesson_lecture(target):
+    lesson = mommy.make('memword.Lesson', student=target.author, lesson_type='lecture')
+    mommy.make('memword.Question', target=target, lesson=lesson)
+    return lesson
+
+
+@pytest.fixture()
+def lesson_exam(target):
+    lesson = mommy.make('memword.Lesson', student=target.author, lesson_type='exam')
+    mommy.make('memword.Question', target=target, lesson=lesson)
+    return lesson

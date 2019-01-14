@@ -24,7 +24,7 @@ export class NewLessonForm extends BaseForm {
             })
     }
 
-    clear () {
-        this.lesson(new LessonRepresentation())
+    setData (data) {
+        this.lesson(new LessonRepresentation(data))
     }
 }
