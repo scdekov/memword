@@ -11,11 +11,30 @@ export class LessonsPage {
         this.addingNewLesson = ko.observable()
 
         this.lessons = context.lessons
+        this.targets = context.targets
         this.active = ko.observable()
     }
 
     activate (lesson) {
         this.active(lesson)
+    }
+
+    getDescriptionAnswers (target) {
+        // this wont work if we have less than 4 targets :/
+        let indexes = []
+        let randNormMultiplier = Math.pow(10, Math.ceil(Math.log10(this.targets().length)))
+        while (indexes.length < 3) {
+            let ix = Math.floor(Math.random() * randNormMultiplier) % this.targets().length
+            if (!indexes.includes(ix) && target.description() !== this.targets()[ix].description()) {
+                indexes.push(ix)
+            }
+        }
+        let answers = indexes.map(ix => {
+            return this.targets()[ix].description()
+        })
+        let correctAnswerIx = Math.floor(Math.random() * 10) % 4
+        answers.splice(correctAnswerIx, 0, target.description())
+        return answers
     }
 
     addNew (lessonType) {

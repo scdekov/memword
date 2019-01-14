@@ -17,6 +17,13 @@ User = get_user_model()
 class SubmitQuestionSerializer(serializers.Serializer):
     confidence_level = serializers.IntegerField()
     question_id = serializers.IntegerField()
+    answer = serializers.CharField(allow_blank=True, required=False)
+
+    def validate(self, data):
+        if self.context['lesson'].lesson_type == 'exam' and not data.get('answer'):
+            raise serializers.ValidationError('answer is required when submitting exam question')
+
+        return data
 
     def validate_confidence_level(self, confidence_level):
         if confidence_level not in range(1, 11):
@@ -72,13 +79,17 @@ class LessonsViewSet(viewsets.ModelViewSet):
 
     @decorators.action(detail=True, methods=['POST'], url_path='@submit-answer')
     def submit_answer(self, request, pk):
-        serializer = SubmitQuestionSerializer(data=request.data)
+        lesson = self.get_object()
+        serializer = SubmitQuestionSerializer(data=request.data,
+                                              context={'request': request, 'lesson': lesson})
         serializer.is_valid(raise_exception=True)
 
         question = get_object_or_404(Question, lesson_id=pk, id=serializer.validated_data['question_id'])
         question.confidence_level = serializer.validated_data['confidence_level']
         question.passed = True
         question.pass_time = timezone.now()
+        if lesson.lesson_type == 'exam':
+            question.correct = serializer.validated_data['answer'] == question.target.description
         question.save()
 
         if question.lesson.should_finish():

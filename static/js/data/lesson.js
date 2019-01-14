@@ -118,12 +118,17 @@ export class LessonRepresentation extends Lesson {
         })
 
         this.progress = ko.computed(() => {
-            if (this.statusCode() !== 'in-progress') {
+            if (this.statusCode() !== 'in-progress' && this.lessonType() === 'lecture') {
                 return ''
             }
 
             let passedQuestions = this.questions().filter(question => question.passed())
-            return `${passedQuestions.length} / ${this.questions().length}`
+            let display = `${passedQuestions.length} / ${this.questions().length}`
+            if (this.lessonType() === 'exam') {
+                let correctPassedCount = passedQuestions.reduce((sum, question) => sum + (question.correct() ? 1 : 0), 0)
+                display = `${correctPassedCount} / ` + display
+            }
+            return display
         })
     }
 }

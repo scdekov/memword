@@ -5,11 +5,12 @@ class LessonVM {
     constructor (data) {
         this.lesson = data.lesson
         this.activeQuestion = ko.observable(this._getFirstUnAnsweredQuestion())
+        this.selectedAnswer = ko.observable()
         this.started = ko.computed(() => this.lesson.startTime())
         this.finished = ko.observable(!!this.lesson.endTime())
     }
 
-    answerQuestion (confidenceLevel) {
+    questionReviewed (confidenceLevel) {
         fetchJSON(`/api/lessons/${ko.unwrap(this.lesson.id)}/@submit-answer/`, {
             method: 'POST',
             body: JSON.stringify({
@@ -19,6 +20,24 @@ class LessonVM {
         })
             .then(respJSON => {
                 this.activeQuestion()._load(respJSON.question)
+                this._moveToNextQuestion()
+            })
+    }
+
+    answerQuestion (confidenceLevel) {
+        fetchJSON(`/api/lessons/${ko.unwrap(this.lesson.id)}/@submit-answer/`, {
+            method: 'POST',
+            body: JSON.stringify({
+                question_id: ko.unwrap(this.activeQuestion().id),
+                confidence_level: confidenceLevel,
+                // maybe img answer will be possible in the future
+                answer: this.selectedAnswer()
+            })
+        })
+            .then(respJSON => {
+                // handle wrong answer
+                this.activeQuestion()._load(respJSON.question)
+                this.selectedAnswer('')
                 this._moveToNextQuestion()
             })
     }
@@ -47,7 +66,12 @@ class LessonVM {
     }
 }
 
-ko.components.register('lesson', {
+ko.components.register('lecture', {
     viewModel: LessonVM,
-    template: {element: 'lesson'}
+    template: {element: 'lecture'}
+})
+
+ko.components.register('exam', {
+    viewModel: LessonVM,
+    template: {element: 'exam'}
 })
