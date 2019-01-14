@@ -40,7 +40,7 @@ class LessonSerializer(serializers.ModelSerializer):
                   'end_time', 'expected_duration', 'title', 'target_ids', 'planned_start_time')
 
     questions = QuestionSerializer(many=True, read_only=True)
-    lesson_type = serializers.CharField(allow_blank=True, default=Lesson.TYPE_LECTURE)
+    lesson_type = serializers.ChoiceField(allow_blank=True, default=Lesson.TYPE_LECTURE, choices=Lesson.TYPES)
     target_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     planned_start_time = serializers.DateTimeField(default=timezone.now)
     expected_duration = serializers.DurationField(default='60')

@@ -1,9 +1,15 @@
 <script type="text/html" id="lessons-page">
     <div class="page">
         <div class="lessons-list" data-bind="visible: !active()">
-            <div class="add-lesson">
-                <button data-bind="visible: !addingNewLesson(),
-                                   click: addNew">Add Lesson</button>
+            <div class="btn-group add-lesson">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    Add <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right">
+                    <li><a href="#" data-bind="click: addNew.bind($data, 'exam')">Exam</a></li>
+                    <li><a href="#" data-bind="click: addNew.bind($data, 'lecture')">Lecture</a></li>
+                </ul>
             </div>
 
             <div class="card-wide" data-bind="visible: addingNewLesson,
@@ -41,8 +47,8 @@
                 </div>
                 <div class="section-container section-container-width-full">
                     <div class="section btns-section">
-                        <button data-bind="click: $parent.saveNew.bind($parent)">Add</button>
-                        <button data-bind="click: $parent.addingNewLesson.bind($parent, false)">Cancel</button>
+                        <button class="btn btn-primary" data-bind="click: $parent.saveNew.bind($parent)">Add</button>
+                        <button class="btn btn-secondary" data-bind="click: $parent.addingNewLesson.bind($parent, false)">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -82,12 +88,12 @@
                 </div>
                 <div class="section-container section-container-width-full">
                     <div class="section btns-section">
-                        <button data-bind="click: $parent.active.bind($parent, $data),
+                        <button class="btn btn-primary" data-bind="click: $parent.active.bind($parent, $data),
                                            visible: statusCode() !== 'completed',
                                            text: statusCode() === 'in-progress' ? 'Resume' : 'Start'"></button>
-                        <button data-bind="visible: statusCode() === 'completed',
+                        <button class="btn btn-primary" data-bind="visible: statusCode() === 'completed',
                                            click: $parent.duplicate.bind($parent, $data)">Duplicate</button>
-                        <button data-bind="click: $parent.delete.bind($parent, $data)">Delete</button>
+                        <button class="btn btn-secondary" data-bind="click: $parent.delete.bind($parent, $data)">Delete</button>
                     </div>
                 </div>
             </div>
@@ -101,6 +107,5 @@
         }" class="active-lesson"></div>
     </div>
 
-    {% include 'forms/new-lesson.html' %}
     {% include 'lesson.html' %}
 </script>

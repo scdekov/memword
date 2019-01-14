@@ -43,9 +43,23 @@ class TestLessonsViewSet:
 
         assert resp.status_code == status.HTTP_404_NOT_FOUND
 
+    def test_post__invalid_type(self, client, user, target):
+        client.force_authenticate(user)
+        resp = client.post(self.LESSONS_LIST_URL, data={'target_ids': [target.id], 'lesson_type': 'invalid'})
+
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
     def test_post(self, client, user, target):
         client.force_authenticate(user)
         resp = client.post(self.LESSONS_LIST_URL, data={'target_ids': [target.id]})
+
+        assert resp.status_code == status.HTTP_201_CREATED
+        assert resp.data['questions'][0]['target']['identifier'] == target.identifier
+        assert Lesson.objects.get(id=resp.data['id']).student == user
+
+    def test_post__type_exam(self, client, user, target):
+        client.force_authenticate(user)
+        resp = client.post(self.LESSONS_LIST_URL, data={'target_ids': [target.id], 'lesson_type': 'exam'})
 
         assert resp.status_code == status.HTTP_201_CREATED
         assert resp.data['questions'][0]['target']['identifier'] == target.identifier

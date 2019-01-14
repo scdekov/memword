@@ -18,8 +18,8 @@ export class LessonsPage {
         this.active(lesson)
     }
 
-    addNew () {
-        this.newLessonForm.clear()
+    addNew (lessonType) {
+        this.newLessonForm.setData({lesson_type: lessonType})
         this.addingNewLesson(true)
     }
 

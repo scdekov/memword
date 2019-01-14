@@ -4,7 +4,7 @@
 
 <script type="text/html" id="lesson">
 <div class="add-lesson">
-    <button data-bind="click: $parents[1].active.bind($parents[1], null),
+    <button class="btn btn-secondary" data-bind="click: $parents[1].active.bind($parents[1], null),
                        visible: !finished()">Back</button>
 </div>
 <div class="card-wide">
@@ -12,13 +12,13 @@
         <div data-bind="visible: !started()">
             <p data-bind="text: lesson.questions().length + ' questions'"></p>
             <p data-bind="text: 'Expected duration ' + lesson.expectedDuration()"></p>
-            <button data-bind="click: start">START</button>
+            <button class="btn btn-primary" data-bind="click: start">START</button>
         </div>
 
         <div data-bind="visible: finished">
             <p>This lesson had finished. If you want to take it again click duplicate button.</p>
-            <button data-bind="click: $parents[1].duplicate.bind($parents[1], lesson)">DUPLICATE</button>
-            <button data-bind="click: $parents[1].showList.bind($parents[1])">BACK</button>
+            <button class="btn btn-primary" data-bind="click: $parents[1].duplicate.bind($parents[1], lesson)">DUPLICATE</button>
+            <button class="btn btn-secondary" data-bind="click: $parents[1].showList.bind($parents[1])">BACK</button>
         </div>
 
         <div data-bind="template: {
@@ -31,10 +31,10 @@
 
             <div>
                 <p>How easy was that?</p>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 1)">GG</button>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 3)">Need more</button>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 6)">easy</button>
-                <button data-bind="click: $parent.answerQuestion.bind($parent, 9)">EZ</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 9)">EZ</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 6)">easy</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 3)">Need more</button>
+                <button class="btn btn-primary" data-bind="click: $parent.answerQuestion.bind($parent, 1)">GG</button>
             </div>
         </div>
     </div>

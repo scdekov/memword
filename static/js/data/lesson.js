@@ -55,7 +55,7 @@ export class Lesson {
         this.expectedDuration(data.expected_duration)
         this.plannedStartTime(moment(data.planned_start_time).format(DEFAULT_DATE_FORMAT))
         this.timeToStart(moment(data.planned_start_time).endOf('day').fromNow())
-        this.questions(data.questions.map(q => new Question(q)))
+        this.questions((data.questions || []).map(q => new Question(q)))
     }
 
     save () {
