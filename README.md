@@ -51,7 +51,6 @@ Run `pytest` command in the project root directory.
 * Logic for adjusting learning intervals when answering/doing a lessons
 * Logic for automaticly selecting the "best" words to pick when creating a lesson
 * Periodic tasks for adjusting the default intervals for new users/words
-#### TODO
 * Exams
 
 ### Stage 1(TODO)
