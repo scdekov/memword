@@ -70,16 +70,52 @@ class TestLessonsViewSet:
         resp = client.delete(reverse('lesson-detail', kwargs={'pk': lesson.id}))
         assert resp.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_submit_answer(self, client, user, lesson, mocker):
+    def test_submit_answer__lecture(self, client, user, lesson_lecture, mocker):
         client.force_authenticate(user)
 
         handle_question = mocker.patch('memword.api.lessons.LearningIntervalsManager.handle_submitted_question')
-        resp = client.post(reverse('lesson-detail', kwargs={'pk': lesson.id}) + '@submit-answer/',
-                           data={'question_id': lesson.questions.first().id, 'confidence_level': 3})
+        resp = client.post(reverse('lesson-detail', kwargs={'pk': lesson_lecture.id}) + '@submit-answer/',
+                           data={'question_id': lesson_lecture.questions.first().id, 'confidence_level': 3})
 
         assert resp.status_code == status.HTTP_200_OK
-        lesson.refresh_from_db()
-        assert lesson.end_time
+        lesson_lecture.refresh_from_db()
+        assert lesson_lecture.end_time
+        handle_question.assert_called_once()
+
+    def test_submit_answer__exam_no_answer(self, client, user, lesson_exam, mocker):
+        client.force_authenticate(user)
+
+        resp = client.post(reverse('lesson-detail', kwargs={'pk': lesson_exam.id}) + '@submit-answer/',
+                           data={'question_id': lesson_exam.questions.first().id, 'confidence_level': 3})
+
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_submit_answer__exam_correct(self, client, user, lesson_exam, mocker):
+        client.force_authenticate(user)
+
+        handle_question = mocker.patch('memword.api.lessons.LearningIntervalsManager.handle_submitted_question')
+        resp = client.post(reverse('lesson-detail', kwargs={'pk': lesson_exam.id}) + '@submit-answer/',
+                           data={'question_id': lesson_exam.questions.first().id, 'confidence_level': 3,
+                                 'answer': lesson_exam.questions.first().target.description})
+
+        assert resp.status_code == status.HTTP_200_OK
+        lesson_exam.refresh_from_db()
+        assert lesson_exam.end_time
+        assert lesson_exam.questions.first().correct
+        handle_question.assert_called_once()
+
+    def test_submit_answer__exam_wrong(self, client, user, lesson_exam, mocker):
+        client.force_authenticate(user)
+
+        handle_question = mocker.patch('memword.api.lessons.LearningIntervalsManager.handle_submitted_question')
+        resp = client.post(reverse('lesson-detail', kwargs={'pk': lesson_exam.id}) + '@submit-answer/',
+                           data={'question_id': lesson_exam.questions.first().id, 'confidence_level': 3,
+                                 'answer': 'idk'})
+
+        assert resp.status_code == status.HTTP_200_OK
+        lesson_exam.refresh_from_db()
+        assert lesson_exam.end_time
+        assert not lesson_exam.questions.first().correct
         handle_question.assert_called_once()
 
     def test_start(self, client, user, lesson):
