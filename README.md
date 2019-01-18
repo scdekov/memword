@@ -40,7 +40,10 @@ Run `pytest` command in the project root directory.
 
 ## Project development
 ### Stage 0
-#### Because currently I'm the only user(and I'm trying to improve my English vocabulary), my first goal is to be able to add words with some explanations, add those words in lectures/exams which when I'm doing the system will learn by my feedback and find my best "repetition spaces".
+Because currently I'm the only user and I'm trying to improve my English vocabulary,
+my first goal is to be able to add words with some explanations.
+Add those words in lectures/exams which when I'm doing the system will learn by my feedback and
+find my best "repetition spaces".
 
 #### Alredy implemented
 * Create/delete/edit new cards(words)
