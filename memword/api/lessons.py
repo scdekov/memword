@@ -59,8 +59,7 @@ class LessonSerializer(serializers.ModelSerializer):
         student_id = self.context['request'].user.id
         lesson = super().save(student_id=student_id)
 
-        for target_id in target_ids:
-            Question.objects.create(lesson=lesson, target_id=target_id)
+        Question.objects.bulk_create([Question(lesson=lesson, target_id=target_id) for target_id in target_ids])
 
         return lesson
 
@@ -118,8 +117,8 @@ class LessonsViewSet(viewsets.ModelViewSet):
                                            planned_start_time=timezone.now())
         # start time should be calculated somehow
 
-        for question in original_lesson.questions.all():
-            Question.objects.create(target_id=question.target_id, lesson_id=new_lesson.id)
+        Question.objects.bulk_create([Question(target_id=question.target_id, lesson_id=new_lesson.id)\
+                                      for question in original_lesson.questions.all()])
 
         return Response({'lesson': LessonSerializer(new_lesson).data}, status=status.HTTP_201_CREATED)
 
