@@ -20,7 +20,7 @@ class LessonSchedule(models.Model):
 
     @classmethod
     def generate_lessons(cls):
-        today_week_day = timezone.datetime.weekday(timezone.datetime.today())
+        today_week_day = cls._get_weekday()
 
         schedules_to_process = cls.objects.filter((Q(last_generation_time__lt=(timezone.now() - timedelta(hours=24))) |
                                                    Q(last_generation_time__isnull=True)),
@@ -39,6 +39,10 @@ class LessonSchedule(models.Model):
 
             schedule.last_generation_time = timezone.now()
             schedule.save()
+
+    @staticmethod
+    def _get_weekday():
+        return timezone.datetime.weekday(timezone.datetime.today())
 
     @staticmethod
     def _get_lesson_planned_start_time(schedule):
