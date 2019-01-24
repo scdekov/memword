@@ -5,7 +5,7 @@ import {fetchJSON} from 'utils'
 
 export class Context {
     constructor () {
-        this.targets = ko.observableArray()
+        this.targets = []
         this.lessons = ko.observableArray()
 
         this._load()
@@ -19,9 +19,9 @@ export class Context {
     _loadTargets () {
         fetchJSON('/api/targets/')
             .then(jsonData => {
-                this.targets(jsonData.map(targetData => {
+                this.targets = jsonData.map(targetData => {
                     return new Target(targetData)
-                }))
+                })
             })
     }
 

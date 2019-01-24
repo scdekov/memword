@@ -4,15 +4,12 @@
 
 {% block content %}
 <div class="top-menu">
-    <a class="menu-link" href="#" data-bind="click: activePage.bind($data, targetsPage),
-                                             css: {selected: activePage() === targetsPage}">QUESTIONS</a>
-    <a class="menu-link" href="#" data-bind="click: activePage.bind($data, lessonsPage),
-                                             css: {selected: activePage() === lessonsPage}">LESSONS</a>
+    <a class="menu-link" href="#">QUESTIONS</a>
+    <a class="menu-link" href="#">LESSONS</a>
 </div>
+<div id='root'></div>
 
-<div class="main-content" data-bind="template: {name: activePage().templateName, data: activePage()}"></div>
 
-{% include 'pages/targets.html' %}
 {% include 'pages/lessons.html' %}
 
 {% render_bundle 'main' %}

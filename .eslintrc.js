@@ -1,6 +1,14 @@
 module.exports = {
-    "extends": "standard",
+    "extends": [
+        "standard",
+        "plugin:react/recommended"
+    ],
     "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "rules": {
         "indent": ["error", 4],
         "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false  }],
@@ -11,6 +19,7 @@ module.exports = {
         "fetch": false
     },
     "plugins": [
-        "babel"
+        "babel",
+        "react"
     ]
 }

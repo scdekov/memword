@@ -2,16 +2,16 @@ const path = require('path')
 const BundleTracker = require('webpack-bundle-tracker')
 
 module.exports = {
-    entry: './static/js/index.js',
+    entry: './static/js/index.jsx',
 
     module: {
         rules: [{
-            test: /\.js$/,
+            test: /\.js(x?)$/,
             exclude: /(node_modules)/,
             use: {
                 loader: 'babel-loader',
                 options: {
-                    presets: ['babel-preset-es2017'],
+                    presets: ['babel-preset-es2017', 'react'],
                     plugins: ['babel-plugin-transform-class-properties']
                 }
             }
