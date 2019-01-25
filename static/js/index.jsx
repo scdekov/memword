@@ -4,25 +4,34 @@ import 'ko-bindings/edit-target'
 import 'ko-bindings/img'
 import 'ko-bindings/popup'
 
-import {LessonsPage} from 'pages/lessons'
-import {Context} from 'data/context'
-import {Target} from 'data/target'
-import {fetchJSON} from 'utils'
+import { LessonsPage } from 'pages/lessons'
+import { Target } from 'data/target'
+import { Scout } from 'scout'
+import { fetchJSON, debounce } from 'utils'
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TargetsComponent from 'pages/targets.jsx';
 
 class StoreAPI {
-    constructor (onChange) {
+    constructor(onChange) {
         this.onChange = onChange
         this._data = {
             targets: [],
             activeTarget: null,
-            activeTargetImgLinks: []
         }
 
+        // imgLinks: reload
+        // activeTarget: {
+        //     id: 2,
+        //     imgLinks: [],
+        //     imgLink: 'ads',
+        // }
+
+
         this._loadTargets()
+        this.loadActiveTargetDescription = debounce(this._loadActiveTargetDescription.bind(this), 1000)
+        this.loadActiveTargetImgLinks = debounce(this._loadActiveTargetImgLinks.bind(this), 1000)
     }
 
     data () {
@@ -35,38 +44,33 @@ class StoreAPI {
                 const targets = jsonData.map(targetData => {
                     return new Target(targetData)
                 })
-                this._setData({targets})
-
-                this.onChange()
+                this._setData({ targets })
             })
     }
 
-    loadActiveTargetImgLinks () {
+    _loadActiveTargetImgLinks () {
         return Scout.getImages(this._data.activeTarget.identifier)
             .then(links => {
-                let includeCurrent = this._data.activeTarget.imgLink // this._data.activeTargetImgLinks.length === 0 &&
-                if (includeCurrent && links.indexOf(this._data.activeTarget.imgLink) === -1) {
-                    links.push(this._data.activeTarget.imgLink)
+                if (!this._data.activeTarget) return
+
+                let { activeTarget } = this._data
+                if (!activeTarget.imgLink || links.indexOf(activeTarget.imgLink) === -1) {
+                    activeTarget = Object.assign(activeTarget, { imgLink: links[0], imgLinks: links })
+                } else {
+                    activeTarget = Object.assign(activeTarget, { imgLinks: links })
                 }
 
-                let activeTarget = this._data.activeTarget
-                if (!includeCurrent) {
-                    let activeTarget = Object.assign(activeTarget, {imgLink: links[0]})
-                }
-
-                this._setData({activeTargetImgLinks: links, activeTarget: activeTarget})
+                this._setData({ activeTarget })
             })
     }
 
-    loadActiveTargetMeaning () {
-
-    }
-
-    loadMeaning (q) {
-        return Scout.getMeaning(q)
+    _loadActiveTargetDescription () {
+        return Scout.getMeaning(this._data.activeTarget.identifier)
             .then(meaning => {
-                if (!this.description()) {
-                    this.description(meaning)
+                if (!this._data.activeTarget) return
+
+                if (!this._data.activeTarget.description) {
+                    this._setData({activeTarget: Object.assign(this._data.activeTarget, {description: meaning})})
                 } else {
                     // propose changing to default?
                 }
@@ -80,29 +84,77 @@ class StoreAPI {
             })
     }
 
-    saveTarget () {
-        return fetchJSON(`/api/targets/${this.id}/`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                identifier: ko.unwrap(this.identifier),
-                description: ko.unwrap(this.description),
-                img_link: ko.unwrap(this.imgLink)
+    saveActiveTarget () {
+        let { id, identifier, description, imgLink } = this._data.activeTarget
+        if (!identifier) {
+            this._setData({ activeTarget: null })
+            return
+        }
+
+        if (id) {
+            fetchJSON(`/api/targets/${id}/`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    identifier: identifier,
+                    description: description,
+                    img_link: imgLink
+                })
+            }).then(jsonData => {
+                let targets = this._data.targets.map(target => target.id === id ? new Target(jsonData) : target)
+                this._setData({ targets, activeTarget: null })
             })
-        })
+        } else {
+            fetchJSON('/api/targets/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    identifier: identifier,
+                    description: description,
+                    img_link: imgLink
+                })
+            }).then(jsonData => { this._setData({ targets: [new Target(jsonData), ...this._data.targets],
+                                                  activeTarget: null }) })
+        }
     }
 
     removeTarget (id) {
         return fetchJSON(`/api/targets/${id}/`, {
             method: 'DELETE'
         })
-            .done(() => {
+            .then(() => {
                 let targets = this._data.targets.filter(target => target.id !== id)
-                this._setData({targets})
+                this._setData({ targets })
             })
     }
 
-    setActiveTarget (target) {
-        this._setData({activeTarget: target})
+    setNewAsActiveTarget () {
+        this._setData({activeTarget: {
+            id: null,
+            imgLink: null,
+            identifier: '',
+            description: '',
+            imgLinks: []
+        }})
+    }
+
+    setActiveTarget (id) {
+        let target = this._data.targets.find(target => target.id === id)
+        this._setData({activeTarget: {
+            id,
+            imgLink: target.imgLink,
+            identifier: target.identifier,
+            description: target.description,
+            imgLinks: []
+        }})
+        this.loadActiveTargetImgLinks()
+    }
+
+    modifyActiveTarget (changes) {
+        if (changes.identifier) {
+            this.loadActiveTargetImgLinks()
+            this.loadActiveTargetDescription()
+        }
+
+        this._setData({ activeTarget: Object.assign(this._data.activeTarget, changes) })
     }
 
     _setData (newData) {
@@ -112,18 +164,17 @@ class StoreAPI {
 }
 
 class App extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props)
-        this.state = {storeAPI: new StoreAPI(this.forceUpdate.bind(this))}
+        this.state = { storeAPI: new StoreAPI(this.forceUpdate.bind(this)) }
     }
 
     render () {
         return (
             <TargetsComponent storeAPI={this.state.storeAPI}
-                              targets={this.state.storeAPI.data().targets}
-                              activeTarget={this.state.storeAPI.data().activeTarget}
-                              activeTargetImgLinks={this.state.storeAPI.data().activeTargetImgLinks}
-                              />
+                targets={this.state.storeAPI.data().targets}
+                activeTarget={this.state.storeAPI.data().activeTarget}
+            />
         )
     }
 }

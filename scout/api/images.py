@@ -31,6 +31,6 @@ class ImagesAPIView(views.APIView):
         images_json = images_response.json()
 
         return Response({
-            'images': ImageSerializer(images_json['items'], many=True).data,
+            'images': ImageSerializer(images_json.get('items', []), many=True).data,
             'query_correction': images_json.get('spelling', {}).get('correctedQuery')
         })

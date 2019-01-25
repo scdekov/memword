@@ -27,3 +27,12 @@ export function fetchJSON (url, params = {}) {
 function copyObj (obj) {
     return JSON.parse(JSON.stringify(obj))
 }
+
+export function debounce (func, ms) {
+    let lastTimeout = null
+
+    return (...args) => {
+        clearTimeout(lastTimeout)
+        lastTimeout = setTimeout(() => func(...args), ms)
+    }
+}
