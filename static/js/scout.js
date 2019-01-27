@@ -1,34 +1,20 @@
-import {fetchJSON} from 'utils'
+import { fetchJSON, cacheRequest } from 'utils'
 
 export class Scout {
-    static googleCache = {}
-    static meaningsCache = {}
+    static cachedFetchJSON = cacheRequest(fetchJSON, { prolongCachedResponse: 1000 })
 
     static getMeaning = q => {
-        if (q in Scout.meaningsCache) {
-            return Scout.meaningsCache[q]
-        }
-        return (Scout.meaningsCache[q] = fetchJSON(`api/meanings?q=${encodeURIComponent(q)}`)
-            .then(json => {
-                return json.meanings[0].description
-            }))
+        return Scout.cachedFetchJSON(`api/meanings?q=${encodeURIComponent(q)}`)
+            .then(json => json.meanings[0].description, console.log)
     }
 
     static getImages = q => {
-        return Scout._googleSearch(q)
+        return Scout.cachedFetchJSON(`api/images?q=${encodeURIComponent(q)}`)
             .then(json => json.images.map(img => img.link))
     }
 
     static getCorrectQuery = q => {
-        return Scout._googleSearch(q)
+        return Scout.cachedFetchJSON(`api/images?q=${encodeURIComponent(q)}`)
             .then(json => json.query_correction)
-    }
-
-    static _googleSearch = q => {
-        if (q in Scout.googleCache) {
-            return Scout.googleCache[q]
-        }
-
-        return (Scout.googleCache[q] = fetchJSON(`api/images?q=${encodeURIComponent(q)}`))
     }
 }

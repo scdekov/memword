@@ -11,8 +11,8 @@ module.exports = {
             use: {
                 loader: 'babel-loader',
                 options: {
-                    presets: ['babel-preset-es2017', 'react'],
-                    plugins: ['babel-plugin-transform-class-properties']
+                    presets: ['@babel/preset-env', '@babel/preset-react'],
+                    plugins: ['babel-plugin-transform-class-properties', '@babel/plugin-proposal-object-rest-spread']
                 }
             }
         }, {
@@ -38,6 +38,6 @@ module.exports = {
     },
 
     plugins: [
-        new BundleTracker({filename: './webpack-stats.json'})
+        new BundleTracker({ filename: './webpack-stats.json' })
     ]
 }

@@ -3,14 +3,7 @@
 {% load staticfiles %}
 
 {% block content %}
-<div class="top-menu">
-    <a class="menu-link" href="#">QUESTIONS</a>
-    <a class="menu-link" href="#">LESSONS</a>
-</div>
 <div id='root'></div>
-
-
-{% include 'pages/lessons.html' %}
 
 {% render_bundle 'main' %}
 {% endblock content %}

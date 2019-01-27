@@ -1,13 +1,13 @@
 import ko from 'knockout'
-import {Target} from './target'
-import {isEmpty, fetchJSON} from 'utils'
+import { Target } from './target'
+import { isEmpty, fetchJSON } from 'utils'
 import moment from 'moment'
 
 const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD'
 const DEFAULT_DATETIME_FORMAT = 'YYYY-MM-DDThh:mm'
 
 class Question {
-    constructor (data = {}) {
+    constructor(data = {}) {
         this.id = ko.observable()
         this.target = ko.observable()
         this.passed = ko.observable()

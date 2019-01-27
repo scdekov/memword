@@ -36,3 +36,24 @@ export function debounce (func, ms) {
         lastTimeout = setTimeout(() => func(...args), ms)
     }
 }
+
+export function cacheRequest (func, options = { cacheValidityTimeout: 1000 * 60 * 60, prolongCachedResponse: 0 }) {
+    return (...args) => {
+        if (!func.name) { throw new Error('Cannot cache unnamed functions') }
+
+        let key = `${func.name} ${JSON.stringify(args)}`
+        let cached = window.localStorage.getItem(key)
+
+        if (cached) {
+            return new Promise((resolve) =>
+                setTimeout(() => resolve(JSON.parse(cached)), options.prolongCachedResponse)
+            )
+        } else {
+            return func(...args).then((result) => {
+                setTimeout(() => { window.localStorage.removeItem(key) }, options.cacheValidityTimeout)
+                window.localStorage.setItem(key, JSON.stringify(result))
+                return result
+            })
+        }
+    }
+}

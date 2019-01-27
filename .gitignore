@@ -4,7 +4,7 @@ package-lock.json
 server/credentials.py
 venv
 *.pyc
-static/bundles/*
+static/bundles/*.js
 *~
 .vscode
 celerybeat-schedule
