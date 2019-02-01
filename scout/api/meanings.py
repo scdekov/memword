@@ -2,6 +2,7 @@ import requests
 
 from rest_framework import serializers, views
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, APIException
 
 from django.conf import settings
 
@@ -27,7 +28,10 @@ class MeaningsAPIView(views.APIView):
                                             'app_key': settings.CREDENTIALS.OXFORD_DICT_APP_KEY
                                         })
 
-        meanings_response.raise_for_status()
+        if not meanings_response.ok:
+            if meanings_response.status_code == 404:
+                raise NotFound
+            raise APIException
 
         return Response({'meanings': self._prepare_meanings_repsonse(meanings_response.json())})
 
