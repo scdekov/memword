@@ -36,7 +36,7 @@ CREDENTIALS = credentials
 SECRET_KEY = '%ve4h%t=7c((8e19gus$d+qoy8vdkp124nrnxsshh!^587q39q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENVIRONMENT != 'production'
 
 ALLOWED_HOSTS = ['*']
 
