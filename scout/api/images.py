@@ -8,29 +8,25 @@ from django.conf import settings
 from scout.api.serializers import SearchSerializer
 
 
-class ImageSerializer(serializers.Serializer):
-    class Meta:
-        fields = ('link',)
-
-    link = serializers.URLField()
-
-
 class ImagesAPIView(views.APIView):
     def get(self, request):
         serializer = SearchSerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
 
-        images_response = requests.get(settings.GOOGLE_SEARCH_URL, params={
-            'key': settings.CREDETIALS.GOOGLE_API_KEY,
-            'cx': settings.CREDETIALS.GOOGLE_CX,
-            'searchType': 'image',
-            'q': serializer.validated_data['q']
-        })
+        images_response = requests.post(settings.IMAGE_DEPOT_URL,
+                                        json={'term': serializer.validated_data['q']},
+                                        headers=self._get_links_request_headers())
 
         images_response.raise_for_status()
         images_json = images_response.json()
 
         return Response({
-            'images': ImageSerializer(images_json['items'], many=True).data,
+            'images': images_json.get('links', []),
             'query_correction': images_json.get('spelling', {}).get('correctedQuery')
         })
+
+    def _get_links_request_headers(self):
+        return {
+            'Content-type': 'application/json',
+            'Authorization': 'Token {}'.format(settings.CREDENTIALS.IMAGE_DEPOT_API_TOKEN)
+        }

@@ -23,8 +23,8 @@ class MeaningsAPIView(views.APIView):
         meanings_response = requests.get(settings.OXFORD_DICT_SEARCH_URL.format(word=serializer.validated_data['q']),
                                          headers={
                                             'Accept': 'application/json',
-                                            'app_id': settings.CREDETIALS.OXFORD_DICT_APP_ID,
-                                            'app_key': settings.CREDETIALS.OXFORD_DICT_APP_KEY
+                                            'app_id': settings.CREDENTIALS.OXFORD_DICT_APP_ID,
+                                            'app_key': settings.CREDENTIALS.OXFORD_DICT_APP_KEY
                                         })
 
         meanings_response.raise_for_status()

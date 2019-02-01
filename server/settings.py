@@ -22,13 +22,12 @@ try:
 except ImportError:
     class credentials:
         pass
-    credentials.GOOGLE_CX = os.environ.get('GOOGLE_CX')
-    credentials.GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+    credentials.IMAGE_DEPOT_API_TOKEN = os.environ.get('IMAGES_DEPOT_API_TOKEN')
 
     credentials.OXFORD_DICT_APP_ID = os.environ.get('OXFORD_DICT_APP_ID')
     credentials.OXFORD_DICT_APP_KEY = os.environ.get('OXFORD_DICT_APP_KEY')
 
-CREDETIALS = credentials
+CREDENTIALS = credentials
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -162,8 +161,8 @@ WEBPACK_LOADER = {
 }
 
 
-GOOGLE_SEARCH_URL = 'https://www.googleapis.com/customsearch/v1'
 OXFORD_DICT_SEARCH_URL = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/{word}'
+IMAGE_DEPOT_URL = 'https://image-depot.herokuapp.com/api/links'
 
 
 REST_FRAMEWORK = {

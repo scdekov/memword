@@ -13,7 +13,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 * Python 3.6.7
 * node 8.15.0
-* Google API key
+* ImageDepot API token
 * Oxford dict API key
 
 ### Installing
@@ -29,7 +29,7 @@ npm install
 ### Running the project
 
 ```
-export GOOGLE_CX={...} GOOGLE_API_KEY={...} OXFORD_DICT_APP_ID={...} OXFORD_DICT_APP_KEY={...}  (those can also be added in credentials.py file in the server directory)
+export IMAGE_DEPOT_API_KEY={...} OXFORD_DICT_APP_ID={...} OXFORD_DICT_APP_KEY={...}  (those can also be added in credentials.py file in the server directory)
 npm run watch & python3 manage.py runserver
 ```
 

@@ -1,7 +1,7 @@
 import {fetchJSON} from 'utils'
 
 export class Scout {
-    static googleCache = {}
+    static imageDepotCache = {}
     static meaningsCache = {}
 
     static getMeaning = q => {
@@ -15,20 +15,20 @@ export class Scout {
     }
 
     static getImages = q => {
-        return Scout._googleSearch(q)
-            .then(json => json.images.map(img => img.link))
+        return Scout._imageSearch(q)
+            .then(json => json.images)
     }
 
     static getCorrectQuery = q => {
-        return Scout._googleSearch(q)
+        return Scout._imageSearch(q)
             .then(json => json.query_correction)
     }
 
-    static _googleSearch = q => {
-        if (q in Scout.googleCache) {
-            return Scout.googleCache[q]
+    static _imageSearch = q => {
+        if (q in Scout.imageDepotCache) {
+            return Scout.imageDepotCache[q]
         }
 
-        return (Scout.googleCache[q] = fetchJSON(`api/images?q=${encodeURIComponent(q)}`))
+        return (Scout.imageDepotCache[q] = fetchJSON(`api/images?q=${encodeURIComponent(q)}`))
     }
 }
