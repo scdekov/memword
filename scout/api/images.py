@@ -22,7 +22,7 @@ class ImagesAPIView(views.APIView):
 
         return Response({
             'images': images_json.get('links', []),
-            'query_correction': images_json.get('spelling', {}).get('correctedQuery')
+            'query_correction': images_json.get('spelling_correction', {})
         })
 
     def _get_links_request_headers(self):
