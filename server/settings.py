@@ -22,7 +22,7 @@ try:
 except ImportError:
     class credentials:
         pass
-    credentials.IMAGE_DEPOT_API_TOKEN = os.environ.get('IMAGES_DEPOT_API_TOKEN')
+    credentials.IMAGE_DEPOT_API_TOKEN = os.environ.get('IMAGE_DEPOT_API_TOKEN')
 
     credentials.OXFORD_DICT_APP_ID = os.environ.get('OXFORD_DICT_APP_ID')
     credentials.OXFORD_DICT_APP_KEY = os.environ.get('OXFORD_DICT_APP_KEY')
