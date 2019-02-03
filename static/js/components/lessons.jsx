@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
-import { log } from 'util';
+import Picky from 'react-picky'
+import 'react-picky/dist/picky.css'
 
 class LessonsComponent extends React.Component {
     constructor(props) {
@@ -177,67 +178,71 @@ class NewLessonComponent extends React.Component {
             lessonType: props.lessonType,
             title: '',
             startTime: '',
-            targetIds: []
+            selectedTargets: []
         }
     }
 
-    onTargetCheckboxClicked (targetId) {
-        this.setState({ targetIds: [targetId, ...this.state.targetIds] })
+    onTargetCheckboxClicked (selectedTargets) {
+        this.setState({ selectedTargets })
     }
 
     onPickTopTargetsClick (e) {
         e.preventDefault()
         this.props.store.pickTopLessonTargets()
-            .then(({ targets }) => {
-                this.setState({ targetIds: targets.map(target => target.id) })
+            .then((r) => {
+                const rawTargetIds = r.targets.map(t => t.id)
+                this.setState({ selectedTargets: this.props.targets.filter(t => rawTargetIds.includes(t.id)) })
             })
     }
 
     onSave () {
-        const { lessonType, title, startTime, targetIds } = this.state
-        this.props.store.createLesson({ lessonType, title, startTime, targetIds })
+        const { lessonType, title, startTime, selectedTargets } = this.state
+        this.props.store.createLesson({ lessonType, title, startTime, targetIds: selectedTargets.map(t => t.id) })
         this.props.close()
     }
 
     render () {
         return (
-            <div className="card-wide">
-                <div className="section-container">
-                    <div className="section fixed-width">
-                        <div className="section-title">Title</div>
-                        <div className="section-value">
-                            <input type="text" onChange={({ target }) => this.setState({ title: target.value })} />
-                        </div>
-                    </div>
-                    <div className="section fixed-width">
-                        <div className="section-title">Start</div>
-                        <div className="section-value">
-                            <input type="date" onChange={({ target }) => this.setState({ startTime: target.value })} />
-                        </div>
+            <div className="new-card">
+                <div className="section fixed-width">
+                    <div className="section-title">Title</div>
+                    <div className="section-value">
+                        <input type="text" onChange={({ target }) => this.setState({ title: target.value })} />
                     </div>
                 </div>
-                <div className="section-container">
-                    <div className="section">
-                        <div className="section-title">
-                            Questions <a href="#" onClick={this.onPickTopTargetsClick.bind(this)}>pick best</a>
-                        </div>
-                        <div className="section-value">
-                            <ul className="selected-questions new">
-                                {
-                                    this.props.targets.map((target) => (
-                                        <li key={target.id}>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={!!this.state.targetIds.find((id) => id === target.id)}
-                                                    onChange={this.onTargetCheckboxClicked.bind(this, target.id)} />
-                                                <span> {target.identifier}</span>
-                                            </label>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                        </div>
+                <div className="section fixed-width">
+                    <div className="section-title">Start</div>
+                    <div className="section-value">
+                        <input type="date" onChange={({ target }) => this.setState({ startTime: target.value })} />
+                    </div>
+                </div>
+                <div className="section">
+                    <div className="section-title">Questions</div>
+                    <div className="selected-questions">
+                        <Picky
+                            options={this.props.targets}
+                            value={this.state.selectedTargets}
+                            multiple={true}
+                            valueKey="id"
+                            labelKey="identifier"
+                            includeSelectAll={true}
+                            includeFilter={true}
+                            dropdownHeight={300}
+                            onChange={selectedTargets => this.setState({ selectedTargets })}
+                            renderSelectAll={({ tabIndex }) => {
+                                return (
+                                    <div
+                                        tabIndex={tabIndex}
+                                        role="option"
+                                        className={'option selected'}
+                                        onClick={this.onPickTopTargetsClick.bind(this)}
+                                        onKeyPress={this.onPickTopTargetsClick.bind(this)}
+                                    >
+                                        <span>PICK BEST</span>
+                                    </div>
+                                )
+                            }}
+                        />
                     </div>
                 </div>
                 <div className="section-container section-container-width-full">

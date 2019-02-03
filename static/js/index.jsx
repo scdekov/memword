@@ -2,13 +2,13 @@ import '../css/style'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TargetsComponent from 'components/targets.jsx'
-import LessonsComponent from 'components/lessons.jsx'
 import { HashRouter as Router, Redirect, Route, Switch, NavLink } from 'react-router-dom'
-
 import moment from 'moment'
 import { fetchJSON, debounce, cacheRequest } from 'utils'
+
 import { Scout } from 'scout'
+import TargetsComponent from 'components/targets.jsx'
+import LessonsComponent from 'components/lessons.jsx'
 
 const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD'
 const DEFAULT_DATETIME_FORMAT = 'YYYY-MM-DDThh:mm'
