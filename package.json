@@ -42,12 +42,14 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^3.1.0",
     "stylish": "^1.0.0",
+    "webpack-dev-server": "^3.1.14",
     "webpack-notifier": "^1.6.0"
   },
   "scripts": {
     "watch": "webpack --config webpack.dev.js --watch",
     "build": "webpack --config webpack.prod.js",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "server": "webpack-dev-server --config webpack.dev.js --hot"
   },
   "author": "",
   "license": "ISC"

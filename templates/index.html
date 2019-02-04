@@ -5,5 +5,9 @@
 {% block content %}
 <div id='root'></div>
 
+{% if env == 'development' %}
+<script type="text/javascript" src="http://localhost:8080/main.js"></script>
+{% else %}
 {% render_bundle 'main' %}
+{% endif %}
 {% endblock content %}
