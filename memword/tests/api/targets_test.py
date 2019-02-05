@@ -57,3 +57,14 @@ class TestTargetsViewSet:
         client.force_authenticate(user2)
         resp = client.delete(reverse('target-detail', kwargs={'pk': target.id}))
         assert resp.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_create_from_list(self, client, user):
+        client.force_authenticate(user)
+        resp = client.post(self.TARGETS_LIST_URL + '@from-list/',
+                           data={'identifiers': ['first', 'second']})
+
+        assert resp.status_code == status.HTTP_201_CREATED
+        targets = Target.objects.all()
+        assert len(targets) == 2
+        assert targets[0].is_verified is targets[1].is_verified is False
+        assert set([targets[0].identifier, targets[1].identifier]) == set(['first', 'second'])

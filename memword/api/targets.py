@@ -1,6 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, decorators, status
+from rest_framework.response import Response
 
-from memword.api.serializers import TargetSerializer
+from memword.api.serializers import TargetSerializer, CreateTargetsFromListSerializer
 from memword.models.target import Target
 
 
@@ -18,3 +19,15 @@ class TargetsViewSet(viewsets.ModelViewSet):
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
         return queryset.filter(author=self.request.user)
+
+    @decorators.action(detail=False, methods=['POST'], url_path='@from-list')
+    def from_list(self, request):
+        serializer = CreateTargetsFromListSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        Target.objects.bulk_create([
+            Target(identifier=identifier, author_id=request.user.id)
+            for identifier in serializer.validated_data['identifiers']
+        ])
+
+        # maybe returning the new created targets here?
+        return Response({}, status=status.HTTP_201_CREATED)

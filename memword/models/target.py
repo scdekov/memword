@@ -9,6 +9,7 @@ class Target(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='targets')
     date_created = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
+    is_verified = models.BooleanField(default=False)
 
     def need_notification(self):
         return self.repetitions.order_by('-id').first().date_seen
