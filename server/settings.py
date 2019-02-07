@@ -18,13 +18,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 try:
-    from server import credentials
+    from server import credentials as CREDENTIALS
 except ImportError:
     class credentials:
         def __getattribute__(self, key):
             return os.environ.get(key)
-
-CREDENTIALS = credentials
+    CREDENTIALS = credentials()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
