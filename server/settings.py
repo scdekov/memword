@@ -18,16 +18,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 try:
-    from server import credentials
+    from server import credentials as CREDENTIALS
 except ImportError:
     class credentials:
-        pass
-    credentials.IMAGE_DEPOT_API_TOKEN = os.environ.get('IMAGE_DEPOT_API_TOKEN')
-
-    credentials.OXFORD_DICT_APP_ID = os.environ.get('OXFORD_DICT_APP_ID')
-    credentials.OXFORD_DICT_APP_KEY = os.environ.get('OXFORD_DICT_APP_KEY')
-
-CREDENTIALS = credentials
+        def __getattribute__(self, key):
+            return os.environ.get(key)
+    CREDENTIALS = credentials()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -56,6 +52,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'social_django',
+
     'webpack_loader',
 
     'memword',
@@ -66,12 +64,25 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'memword.middleware.OneUserAuthentication',  # I want to always be logged as me for now
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.open_id.OpenIdAuth',
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = CREDENTIALS.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = CREDENTIALS.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
 
 if ENVIRONMENT == 'production':
     MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware'] + MIDDLEWARE
@@ -89,6 +100,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },

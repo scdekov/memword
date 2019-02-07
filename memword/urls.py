@@ -24,7 +24,7 @@ class AuthenticatedTemplateView(LoginRequiredMixin, TemplateView):
 
 
 urlpatterns = [
-    path('', AuthenticatedTemplateView.as_view(template_name='index.html')),
+    path('', AuthenticatedTemplateView.as_view(template_name='index.html'), name='home'),
     path('admin/', admin.site.urls),
     path('api/', include('memword.api.urls'))
 ]
