@@ -9,6 +9,18 @@ from memword.models.user_learning_interval import UserLearningIntervals
 @register(Target)
 class TargetAdmin(ModelAdmin):
     list_display = ('identifier', 'author_id', 'description', 'img_link')
+    actions = ['copy_to_my_user']
+
+    def copy_to_my_user(self, request, queryset):
+        for target in queryset:
+            Target.objects.create(
+                identifier=target.identifier,
+                description=target.description,
+                img_link=target.img_link,
+                author=request.user,
+                is_verified=True
+            )
+    copy_to_my_user.short_description = 'Copy selected targets to the current logged user'
 
 
 @register(Lesson)
