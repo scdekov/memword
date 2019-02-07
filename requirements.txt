@@ -40,6 +40,7 @@ vine==1.1.4
 wcwidth==0.1.7
 wrapt==1.10.11
 django-webpack-loader==0.6.0
+social-auth-app-django==3.1.0
 
 # dev depencies
 pytest==4.0.2
