@@ -20,6 +20,24 @@ export function fetchJSON (url, params = {}) {
         'Content-Type': 'application/json'
     }, resultParams['headers'] || {})
 
+    if (url === '/api/questions/@current') {
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(
+                [1, 2, 3].map((id) =>
+                    ({
+                        id: id,
+                        target_id: `correct-target-${id}`,
+                        answers: [
+                            { target_id: `correct-target-${id}`, identifier: `one-${id}`, description: 'Some random stuff', imgUrl: '' },
+                            { target_id: 'not-correct-target-3', identifier: `one-${id}`, description: 'Not correct 3', imgUrl: '' },
+                            { target_id: 'not-correct-target-2', identifier: `one-${id}`, description: 'Not correct 2', imgUrl: '' },
+                            { target_id: 'not-correct-target-1', identifier: `one-${id}`, description: 'Not correct 1', imgUrl: '' }
+                        ]
+                    })
+                )))
+        })
+    }
+
     return fetch(url, resultParams)
         .then(handleAPIResponse)
 }

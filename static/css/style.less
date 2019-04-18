@@ -1,48 +1,55 @@
 
 @font-color: #0c0c0ccf;
-.search {
-    font-size: 30px;
-    vertical-align: top;
+.main-content {
+    width: 100%;
+    min-width: 380px;
 }
 
-.close {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    opacity: 0.3;
-    &:hover {
-        opacity: 1;
-    }
-    &:before,
-    &:after {
-        position: absolute;
-        left: 20px;
-        content: ' ';
-        height: 33px;
-        width: 2px;
-        background-color: #333;
-    }
-    &:before {
-        transform: rotate(45deg);
-    }
-    &:after {
-        transform: rotate(-45deg);
+.main-content .central-button {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.5em;
+}
+
+.btn-link {
+    background: none !important;
+    color: inherit;
+    border: none;
+    padding: 0 !important;
+    cursor: pointer;
+    outline: none;
+}
+
+img.loadable {
+    background: transparent url('http://thinkfuture.com/wp-content/uploads/2013/10/loading_spinner.gif') center no-repeat;
+}
+
+.page {
+    padding: 30px 50px 0 50px;
+}
+
+@media (max-width: 1285px) {
+    .page {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 
-.top-menu {
-    display: flex;
-    .menu-link {
-        padding: 20px;
-        text-decoration: none;
-        &.selected {
-            background-color: #ededed;
-        }
-    }
+input::placeholder {
+    color: #ccc;
+}
+
+.lesson-practice .stretch-enter {
+  width: 100%;
+  background-color: blue;
+  height: 10px;
+}
+
+.lesson-practice .stretch-enter-active {
+  height: 300px;
+  transition: height 500ms ease-in;
 }
 
 @import 'loading-spinner.less';
 @import 'cards.less';
 @import 'targets.less';
-@import 'layout.less';
-@import 'lessons.less';

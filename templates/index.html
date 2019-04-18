@@ -1,13 +1,31 @@
-{% extends 'base.html' %}
 {% load render_bundle from webpack_loader %}
 {% load staticfiles %}
 
-{% block content %}
-<div id='root'></div>
+<!doctype html>
+<html lang="">
 
-{% if env == 'development' or True %}
-<script type="text/javascript" src="http://localhost:8080/main.js"></script>
-{% else %}
-{% render_bundle 'main' %}
-{% endif %}
-{% endblock content %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
+    integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"
+    integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18Nw"
+    crossorigin="anonymous"></script>
+</head>
+
+<body class="container-fluid">
+  <div id='root'></div>
+  {% if env == 'development' or True %}
+  <script type="text/javascript" src="http://localhost:8080/main.js"></script>
+  {% else %}
+  {% render_bundle 'main' %}
+  {% endif %}
+</body>
+
+</html>

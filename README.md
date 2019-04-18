@@ -29,8 +29,9 @@ npm install
 ### Running the project
 
 ```
+. venv/bin/activate
 export GOOGLE_CX={...} GOOGLE_API_KEY={...} OXFORD_DICT_APP_ID={...} OXFORD_DICT_APP_KEY={...}  (those can also be added in credentials.py file in the server directory)
-npm run watch & python3 manage.py runserver
+python3 manage.py runserver & npm run server
 ```
 
 ## Running the tests
