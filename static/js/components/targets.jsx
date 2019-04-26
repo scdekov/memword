@@ -31,11 +31,9 @@ class TargetsComponent extends Component {
 
     render () {
         return (
-            <div className="page">
-                <div className="cards-container">
-                    {this.renderFirst()}
-                    {this.props.store.getTargets().map((target) => this.renderTarget(target))}
-                </div>
+            <div className="cards-container">
+                {this.renderFirst()}
+                {this.props.store.getTargets().map((target) => this.renderTarget(target))}
             </div>
         )
     }

@@ -3,12 +3,42 @@
 .main-content {
     width: 100%;
     min-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .main-content .central-button {
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.5em;
+  width: 50%;
+}
+
+@lesson-contaner-height: 1000px;
+.lesson-accordion-enter {
+  min-height: 0px;
+}
+.lesson-accordion-enter-active {
+  min-height: @lesson-contaner-height;
+  transition: min-height 1s ease-in;
+}
+
+.lesson-accordion-enter-done {
+  min-height: @lesson-contaner-height;
+}
+
+.lesson-accordion-exit {
+  min-height: @lesson-contaner-height;
+}
+.lesson-accordion-exit-active {
+  min-height: 0px;
+  transition: min-height 1s ease-out;
+}
+
+.lesson-accordion-exit-done {
+  min-height: 0px;
+}
+
+.lessons-container {
+  width: 100%;
 }
 
 .btn-link {

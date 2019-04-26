@@ -4,12 +4,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 import { fetchJSON, debounce, cacheRequest } from 'utils'
-import { bundle, combine } from 'bund'
 
 import { Scout } from 'scout'
 import TargetsComponent from 'components/targets.jsx'
 import LessonPracticeComponent from 'components/lesson-practice.jsx'
-import { CSSTransition } from 'react-transition-group'
+import CSSTransition from 'react-transition-group/CSSTransition'
 
 const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD'
 const DEFAULT_DATETIME_FORMAT = 'YYYY-MM-DDThh:mm'
@@ -168,6 +167,7 @@ class Store {
                     img_link: imgLink
                 })
             }).then(jsonData => {
+                debugger
                 this._setData({
                     targets: [new Target(jsonData), ...this._data.targets],
                     activeTarget: null
@@ -283,26 +283,33 @@ class App extends React.Component {
     constructor(props) {
         super(props)
 
-        this.state = { store: new Store(this.forceUpdate.bind(this)) }
+        this.state = { store: new Store(this.forceUpdate.bind(this)), lessonAccordionOpened: false }
+    }
+
+    setLessonAccordion (value) {
+        this.setState({ lessonAccordionOpened: value })
     }
 
     render () {
         return (
-            <Router>
-                <div>
-                    <div className="top-menu">
-                        <NavLink activeClassName="selected" className="menu-link" to="/words"> WORDS </NavLink>
-                        <NavLink activeClassName="selected" className="menu-link" to="/lessons"> LESSONS </NavLink>
-                    </div>
-                    <div className="main-content">
-                        <Switch>
-                            <Route path="/words" render={(props) => <TargetsComponent {...props} store={this.state.store} />} />
-                            <Route path="/lessons" render={(props) => <LessonsComponent {...props} store={this.state.store} />} />
-                            <Redirect to="/words" />
-                        </Switch>
-                    </div>
+            <div>
+                <div className="main-content">
+                    <button
+                        className="central-button btn btn-primary btn-lg btn-block"
+                        onClick={() => this.setLessonAccordion(!this.state.lessonAccordionOpened)}
+                    > Practice
+                    </button>
+                    <CSSTransition
+                        in={this.state.lessonAccordionOpened}
+                        timeout={1000}
+                        classNames="lesson-accordion"
+                        unmountOnExit
+                    >
+                        <div className="lessons-container"></div>
+                    </CSSTransition>
+                    <TargetsComponent store={this.state.store} />
                 </div>
-            </Router>
+            </div>
         )
     }
 }

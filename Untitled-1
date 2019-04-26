@@ -1,0 +1,94 @@
+ON new lesson
+  target => question(target_id, lesson_id, user_id, correct, timestamp)
+
+ON pick best
+  select questions where timestamp
+
+
+create lesson L1
+
+when to create lesson L2
+  1. L1 is finished, there are some words left not well learned
+  2. I want lesson on some of the new words
+  3. I want lesson on most difficult words ()
+
+
+
+------
+(I) Specific day and hour -> a lesson
+
+(II) Lesson on demand(Now)
+
+------
+Specific day and hour -> a lesson
+
+Friday 18:00
+
+target -> question -> correct
+
+each targets
+    target -> last_question(Nth - 5th)
+    timeOffset = Time.now - last_question.passTime
+    userLearningInterval = INTERVALS.get(Nth, N+1th)
+    |timeOffset - userLearningInterval|
+
+
+1. userLearningInterval -> learningInterval
+2. lessons choose question -> batch of questions make lesson
+
+
+many questions(a lot data)
+lesson ->
+  questions history
+  old lessons
+
+
+Lesson on demand(Now) -> Container questions for now
+----------------------
+
+questions
+
+correct, confidenceLevel, passTime, timeSincePreviousAsked
+---------------------------------------------------------
+
+Number of questions (5 to 20)
+when(correct, timeSincePreviousAsked) => Date
+TimeTolerance (a day, 1 hour)
+
+isItSutable(question, Time.now) => true/false
+
+def when(correct, confidenceLevel, timeSincePreviousAsked):
+    if !correct
+       (Date.now, 1week)
+
+
+invalidate questions
+
+question created before
+  -> when to do
+  v1 -> v2 -....-> v5
+
+question on demand ->
+  last questions ->
+
+question -> respond -> not correct ->
+
+not correct -> 1 hour
+INTERVALS - timeSincePreviousAsked
+
+GET /api/questions/@current => [{question_id: [ID], ...}]
+[
+  {
+    id: [ID],
+    target_id: target_id,
+    answers: [
+      {target_id: 1, identifier, description, imgUrl},
+      {target_id: 2, identifier, description, imgUrl},
+    ],
+    ...
+  }
+]
+
+POST /api/questions/[question ID]/@submit-answer/, [body: confidenceLevel, correct]
+
+On each new target new query to "GET /api/questions/@current"
