@@ -32,7 +32,7 @@ class Lesson(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     planned_start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True, blank=True)
-    expected_duration = models.DurationField()
+    expected_duration = models.DurationField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.full_clean()
